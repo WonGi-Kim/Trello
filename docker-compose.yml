@@ -1,0 +1,19 @@
+version: '3.8'
+services:
+  db:
+    platform: linux/x86_64
+    image: mysql
+    container_name: code3line
+    restart: always
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: code3line
+      MYSQL_ROOT_USER: root
+      MYSQL_PASSWORD: password
+      TZ: Asia/Seoul
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
