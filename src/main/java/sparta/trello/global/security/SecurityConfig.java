@@ -15,6 +15,16 @@ import org.springframework.security.web.authentication.www.BasicAuthenticationFi
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+    private final JwtProvider jwtProvider;
+    private final UserDetailsServiceImpl userDetailsService;
+
+    @Bean
+    public JwtAuthenticationFilter jwtAuthenticationFilter() {
+
+        return new JwtAuthenticationFilter(jwtProvider, userDetailsService);
+
+    }
+
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
 
@@ -34,6 +44,9 @@ public class SecurityConfig {
                 request
                         .requestMatchers("/**").permitAll()
                         .anyRequest().authenticated());
+
+
+        http.addFilterAt(jwtAuthenticationFilter(), BasicAuthenticationFilter.class);
 
         return http.build();
 
