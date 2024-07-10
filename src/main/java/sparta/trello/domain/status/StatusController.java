@@ -1,6 +1,8 @@
 package sparta.trello.domain.status;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -14,10 +16,9 @@ public class StatusController {
     private StatusService statusService;
 
     @PostMapping("/boards/{boardId}/status")
-    public CommonResponse createStatus(@PathVariable("boardId") Long boardId, @RequestBody CreateStatusRequestDto requestDto) {
+    public ResponseEntity<CommonResponse> createStatus(@PathVariable("boardId") Long boardId, @RequestBody CreateStatusRequestDto requestDto) {
         CommonResponse response = statusService.createStatus(boardId, requestDto);
-
-        return response;
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
 }

@@ -7,6 +7,8 @@ import sparta.trello.domain.board.BoardRepository;
 import sparta.trello.domain.status.dto.CreateStatusRequestDto;
 import sparta.trello.domain.status.dto.CreateStatusResponseDto;
 import sparta.trello.global.common.CommonResponse;
+import sparta.trello.global.exception.CustomException;
+import sparta.trello.global.exception.ErrorCode;
 
 @Service
 public class StatusService {
@@ -27,6 +29,14 @@ public class StatusService {
                 .sequence(createdSequence)
                 .board(board)
                 .build();
+
+        if(statusRepository.existsByBoardIdAndStatusTitle(board.getId(), status.getTitle())) {
+            throw new CustomException(ErrorCode.ALREADY_EXIST_TITLE);
+        }
+
+        if(status.getTitle() == null) {
+            throw new CustomException(ErrorCode.NOT_FOUND_STATUS_TITLE);
+        }
 
         Status savedStatus = statusRepository.save(status);
 
