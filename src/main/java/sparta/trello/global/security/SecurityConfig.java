@@ -8,8 +8,12 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import sparta.trello.global.security.handler.AccessDeniedHandlerImpl;
+import sparta.trello.global.security.handler.AuthenticationEntryPointImpl;
 
 @Configuration
 @RequiredArgsConstructor
@@ -33,12 +37,31 @@ public class SecurityConfig {
     }
 
     @Bean
+    AccessDeniedHandler accessDeniedHandler() {
+
+        return new AccessDeniedHandlerImpl();
+
+    }
+
+    @Bean
+    AuthenticationEntryPoint authenticationEntryPoint() {
+
+        return new AuthenticationEntryPointImpl();
+
+    }
+
+    @Bean
     public SecurityFilterChain securityFilterChain(final HttpSecurity http) throws Exception {
 
         http.csrf(AbstractHttpConfigurer::disable);
         http.formLogin(AbstractHttpConfigurer::disable);
 
         http.sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+
+        http.exceptionHandling(e -> e
+                .authenticationEntryPoint(authenticationEntryPoint()) // 401
+                .accessDeniedHandler(accessDeniedHandler()) // 403
+        );
 
         http.authorizeHttpRequests(request ->
                 request
