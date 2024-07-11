@@ -58,11 +58,6 @@ public class StatusService {
         statusRepository.delete(status);
     }
 
-    /**
-     * @컬럼_수정_아이디어
-     * Drag and Drop이 발생하면, 프론트에서 변경 되어있는 컬럼의 순서를 리스트로 백에 전달
-     * 백엔드에서는 요청을 받아 DB 내부의 sequence 업데이트
-     */
     public void updateStateSequence(Long boardId, List<StatusUpdateRequestDto> currentStatusSequence, User user) {
         Board board = checkBoard(boardId);
         // DB에서 가져온 Status들
@@ -86,19 +81,19 @@ public class StatusService {
 
     public List<StatusResponseDto> getStatusesByBoardId(Long boardId) {
         List<Status> statuses = statusRepository.findByBoardIdOrderBySequence(boardId);
-        List<StatusResponseDto> dtos = new ArrayList<>();
+        List<StatusResponseDto> responseDtos = new ArrayList<>();
 
         for (Status status : statuses) {
-            StatusResponseDto dto = StatusResponseDto.builder()
+            StatusResponseDto responseDto = StatusResponseDto.builder()
                     .statusId(status.getId())
                     .title(status.getTitle())
                     .sequence(status.getSequence())
                     .createAt(status.getCreatedAt())
                     .build();
-            dtos.add(dto);
+            responseDtos.add(responseDto);
         }
 
-        return dtos;
+        return responseDtos;
     }
 
     private void checkManager(String userRole) {
