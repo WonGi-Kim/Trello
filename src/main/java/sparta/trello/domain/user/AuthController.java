@@ -5,11 +5,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 import sparta.trello.global.common.CommonResponse;
 import sparta.trello.global.security.JwtProvider;
+import sparta.trello.global.security.UserPrincipal;
 
 @RestController
 @RequiredArgsConstructor
@@ -32,6 +32,21 @@ public class AuthController {
                 responseDto);
 
         return ResponseEntity.status(HttpStatus.OK).headers(headers).body(response);
+
+    }
+
+    @PutMapping("/auth/logout")
+    public ResponseEntity<CommonResponse<Void>> logout(
+            @AuthenticationPrincipal UserPrincipal principal) {
+
+        authService.logout(principal.getUser());
+
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new CommonResponse<>(
+                        "로그아웃 성공",
+                        HttpStatus.OK.value(),
+                        null
+                ));
 
     }
 
