@@ -1,14 +1,9 @@
-package sparta.trello.domain.comment;
+package sparta.trello.domain.comment.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import sparta.trello.domain.comment.Comment;
 
-@Getter
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
+@Data
 public class CommentResponseDto {
     private Long id;
     private String content;
