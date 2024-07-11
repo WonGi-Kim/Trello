@@ -6,6 +6,7 @@ import sparta.trello.domain.board.Board;
 import sparta.trello.domain.board.BoardRepository;
 import sparta.trello.domain.card.dto.CardRequestDto;
 import sparta.trello.domain.card.dto.CardResponseDto;
+import sparta.trello.domain.card.dto.NicknameRequestDto;
 import sparta.trello.domain.status.Status;
 import sparta.trello.domain.status.StatusRepository;
 import sparta.trello.domain.user.User;
@@ -58,6 +59,28 @@ public class CardService {
 
     public List<CardResponseDto> findCardList() {
         List<Card> cardList = cardRepository.findAll();
+        return cardList.stream().map(card -> new CardResponseDto(card.getContent(), card.getTitle(), card.getDeadline(), card.getStatus(), card.getUser()))
+                .collect(Collectors.toList());
+    }
+
+    public List<CardResponseDto> findCardListByStatus(Long statusId) {
+        if(!statusRepository.existsById(statusId)){
+            throw new CustomException(ErrorCode.NOT_FOUND_STATUS);
+        }
+
+        List<Card> cardList = cardRepository.findCardListByStatus(statusId);
+
+        return cardList.stream().map(card -> new CardResponseDto(card.getContent(), card.getTitle(), card.getDeadline(), card.getStatus(), card.getUser()))
+                .collect(Collectors.toList());
+    }
+
+    public List<CardResponseDto> findCardListByUser(NicknameRequestDto requestDto) {
+        if(!userRepository.existsByNickname(requestDto.getNickname())){
+            throw new CustomException(ErrorCode.USER_NICKNAME_NOT_FOUND);
+        }
+
+        List<Card> cardList = cardRepository.findCardListByUser(requestDto.getNickname());
+
         return cardList.stream().map(card -> new CardResponseDto(card.getContent(), card.getTitle(), card.getDeadline(), card.getStatus(), card.getUser()))
                 .collect(Collectors.toList());
     }
