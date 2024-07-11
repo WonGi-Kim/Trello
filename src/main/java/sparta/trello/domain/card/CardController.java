@@ -51,7 +51,7 @@ public class CardController {
     public ResponseEntity<CommonResponse> deleteCard(@AuthenticationPrincipal UserPrincipal principal, @PathVariable Long boardId, @PathVariable Long cardId){
         User user = principal.getUser();
         cardService.deleteCard(boardId, cardId, user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new CommonResponse<>("삭제 성공", HttpStatus.CREATED.value(), ""));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse<>("삭제 성공", HttpStatus.OK.value(), ""));
     }
 
     @PatchMapping("/boards/{boardId}/cards/{cardId}")
@@ -59,7 +59,7 @@ public class CardController {
             (@AuthenticationPrincipal UserPrincipal principal, @PathVariable Long boardId, @PathVariable Long cardId, @RequestBody CardUpdateRequestDto requestDto){
         User user = principal.getUser();
         CardUpdateResponseDto responseDto = cardService.updateCard(boardId, cardId, requestDto, user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new CommonResponse<>("수정 성공", HttpStatus.CREATED.value(), responseDto));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse<>("수정 성공", HttpStatus.OK.value(), responseDto));
     }
 
     /**
@@ -72,7 +72,7 @@ public class CardController {
             (@AuthenticationPrincipal UserPrincipal principal, @PathVariable Long cardId, @PathVariable Long newStatusId){
         User user = principal.getUser();
         cardService.changeStatus(cardId, newStatusId, user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new CommonResponse<>("변경 성공", HttpStatus.CREATED.value(), ""));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse<>("변경 성공", HttpStatus.OK.value(), ""));
     }
 
 

@@ -6,6 +6,7 @@ import java.time.LocalDate;
 
 @Data
 public class CardUpdateRequestDto {
+    String title;
     String content;
     String nickname;
     LocalDate deadline;

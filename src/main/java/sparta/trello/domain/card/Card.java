@@ -77,4 +77,8 @@ public class Card extends Timestamped {
     public void updateStatus(Long newStatusId){
         this.status.updateStatusId(newStatusId);
     }
+
+    public void updateUser(User newUser) {
+        this.user = newUser;
+    }
 }

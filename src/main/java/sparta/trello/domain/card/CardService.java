@@ -116,13 +116,16 @@ public class CardService {
             throw new CustomException(ErrorCode.NOT_PERMISSION_UPDATE);
         }
 
-        userService.updateNickname(user, requestDto.getNickname());
-
+        User newUser = userRepository.findByNickname(requestDto.getNickname()).orElseThrow(
+                ()-> new CustomException(ErrorCode.USERNAME_NOT_FOUND)
+        );
+        card.updateUser(newUser);
+        card.updateTitle(requestDto.getTitle());
         card.updateContent(requestDto.getContent());
         card.updateDeadline(requestDto.getDeadline());
 
         cardRepository.save(card);
-        return new CardUpdateResponseDto(requestDto.getContent(), requestDto.getNickname(), requestDto.getDeadline());
+        return new CardUpdateResponseDto(requestDto.getTitle(), requestDto.getContent(), newUser, requestDto.getDeadline());
     }
 
     public void changeStatus(Long cardId, Long newStatusId, User user) {
