@@ -3,6 +3,7 @@ package sparta.trello.domain.status;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface StatusRepository extends JpaRepository<Status, Long> {
@@ -13,4 +14,6 @@ public interface StatusRepository extends JpaRepository<Status, Long> {
 
     Optional<Status> findByIdAndBoardId(Long statusId, Long boardId);
     boolean existsById(Long id);
+
+    List<Status> findByBoardIdOrderBySequence(Long boardId);
 }
