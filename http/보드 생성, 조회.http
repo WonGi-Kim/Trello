@@ -1,0 +1,27 @@
+### 로그인 - 유저
+POST http://localhost:8080/auth/login
+Content-Type: application/json
+
+{
+  "email": "test@gmail.com",
+  "password": "passWord123!"
+}
+
+> {%
+    client.global.set("access_token", response.body.result.access);
+    client.global.set("refresh_token", response.body.result.refresh);
+%}
+
+### 보드 생성
+POST http://localhost:8080/boards
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "boardName": "Test Board name",
+  "introduction": "테스트 보드입니다."
+}
+
+### 보드 조회
+GET http://localhost:8080/boards
+Authorization: Bearer {{access_token}}

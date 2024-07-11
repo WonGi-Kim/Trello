@@ -12,4 +12,5 @@ public interface StatusRepository extends JpaRepository<Status, Long> {
     boolean existsByBoardIdAndTitle(Long id, String title);
 
     Optional<Status> findByIdAndBoardId(Long statusId, Long boardId);
+    boolean existsById(Long id);
 }
