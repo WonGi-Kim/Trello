@@ -16,7 +16,7 @@ import java.util.Date;
 @Component
 public class JwtProvider {
 
-    public final String HEADER = "Authorization";
+    public static final String HEADER = "Authorization";
 
     @Value("${jwt.key}")
     private String SECRET_KEY;
