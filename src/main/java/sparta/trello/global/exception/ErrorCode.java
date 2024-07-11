@@ -22,7 +22,13 @@ public enum ErrorCode {
     TOKEN_INVALID(HttpStatus.BAD_REQUEST, "토큰이 유효하지 않습니다."),
 
     // User
-    USERNAME_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다.");
+    USERNAME_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."),
+
+    // Board
+    BOARD_NOT_FOUND(HttpStatus.NOT_FOUND, "Board를 찾을 수 없습니다."),
+
+    // Status
+    STATUS_NOT_FOUND(HttpStatus.NOT_FOUND, "Status를 찾을 수 없습니다.");
 
     private final HttpStatus status;
     private final String message;

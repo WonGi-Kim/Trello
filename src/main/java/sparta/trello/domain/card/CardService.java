@@ -23,20 +23,17 @@ public class CardService {
     private final UserRepository userRepository;
 
     public CardResponseDto create(CardRequestDto requestDto, Long columnId, Long boardId) {
-        if(requestDto.getTitle() == null){
-            throw new CustomException(ErrorCode.CARD_TITLE_NOT_FOUND);
-        }
 
         Status status = statusRepository.findById(columnId).orElseThrow(
-                () -> new IllegalArgumentException("유효하지 않은 칼럼입니다.")
+                () -> new CustomException(ErrorCode.STATUS_NOT_FOUND)
         );
 
         Board board = boardRepository.findById(boardId).orElseThrow(
-                ()-> new IllegalArgumentException("유효하지 않은 boardId입니다.")
+                ()-> new CustomException(ErrorCode.BOARD_NOT_FOUND)
         );
 
         User user = userRepository.findById(1L).orElseThrow(
-                ()->new IllegalArgumentException("유효하지 않은 userId입니다")
+                ()-> new CustomException(ErrorCode.USERNAME_NOT_FOUND)
         );
 
         int size = cardRepository.findAll().size();
