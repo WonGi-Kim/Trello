@@ -6,10 +6,14 @@ import sparta.trello.domain.board.Board;
 import sparta.trello.domain.board.BoardRepository;
 import sparta.trello.domain.card.dto.CardRequestDto;
 import sparta.trello.domain.card.dto.CardResponseDto;
+import sparta.trello.domain.card.dto.CardUpdateRequestDto;
+import sparta.trello.domain.card.dto.CardUpdateResponseDto;
 import sparta.trello.domain.status.Status;
 import sparta.trello.domain.status.StatusRepository;
+import sparta.trello.domain.status.StatusService;
 import sparta.trello.domain.user.User;
 import sparta.trello.domain.user.UserRepository;
+import sparta.trello.domain.user.UserService;
 import sparta.trello.global.exception.CustomException;
 import sparta.trello.global.exception.ErrorCode;
 
@@ -25,11 +29,12 @@ public class CardService {
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
 
+    private final UserService userService;
+    private final StatusService statusService;
+
     public CardResponseDto create(CardRequestDto requestDto, Long statusId, Long boardId, User user) {
 
-        Status status = statusRepository.findById(statusId).orElseThrow(
-                () -> new CustomException(ErrorCode.NOT_FOUND_STATUS)
-        );
+        Status status = checkStatus(statusId);
 
         Board board = checkBoard(boardId);
 
@@ -93,15 +98,50 @@ public class CardService {
     public void deleteCard(Long boardId, Long cardId, User user) {
         checkBoard(boardId);
 
-        Card card = cardRepository.findById(cardId).orElseThrow(
-                () -> new CustomException(ErrorCode.NOT_FOUND_CARD)
-        );
+        Card card = checkCard(cardId);
 
         if(!Objects.equals(user.getNickname(), card.getUser().getNickname())){
             throw new CustomException(ErrorCode.NOT_PERMISSION_DELETE);
         }
 
         cardRepository.delete(card);
+    }
+
+    public CardUpdateResponseDto updateCard(Long boardId, Long cardId, CardUpdateRequestDto requestDto, User user) {
+        checkBoard(boardId);
+
+        Card card = checkCard(cardId);
+
+        if(!Objects.equals(card.getUser().getNickname(), user.getNickname())){
+            throw new CustomException(ErrorCode.NOT_PERMISSION_UPDATE);
+        }
+
+        User newUser = userRepository.findByNickname(requestDto.getNickname()).orElseThrow(
+                ()-> new CustomException(ErrorCode.USERNAME_NOT_FOUND)
+        );
+        card.updateUser(newUser);
+        card.updateTitle(requestDto.getTitle());
+        card.updateContent(requestDto.getContent());
+        card.updateDeadline(requestDto.getDeadline());
+
+        cardRepository.save(card);
+        return new CardUpdateResponseDto(requestDto.getTitle(), requestDto.getContent(), newUser, requestDto.getDeadline());
+    }
+
+    public void changeStatus(Long cardId, Long newStatusId, User user) {
+        Card card = checkCard(cardId);
+
+        if(!Objects.equals(card.getUser().getNickname(), user.getNickname())){
+            throw new CustomException(ErrorCode.NOT_PERMISSION_CHANGE);
+        }
+
+        Long pastStatusId = card.getStatus().getId();
+
+        if(!Objects.equals(pastStatusId, newStatusId)){
+           card.updateStatus(newStatusId);
+           cardRepository.save(card);
+        }
+
     }
 
     public Board checkBoard(Long boardId){
@@ -111,4 +151,18 @@ public class CardService {
         return board;
     }
 
+    public Card checkCard(Long cardId){
+        Card card = cardRepository.findById(cardId).orElseThrow(
+                () -> new CustomException(ErrorCode.NOT_FOUND_CARD)
+        );
+
+        return card;
+    }
+
+    public Status checkStatus(Long statusId){
+        Status status = statusRepository.findById(statusId).orElseThrow(
+                () -> new CustomException(ErrorCode.NOT_FOUND_STATUS)
+        );
+        return status;
+    }
 }

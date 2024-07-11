@@ -45,4 +45,9 @@ public class Status extends Timestamped {
     public void setSequence(int sequence) {
         this.sequence = sequence;
     }
+
+    public void updateStatusId(Long id){
+        this.id = id;
+    }
+
 }
