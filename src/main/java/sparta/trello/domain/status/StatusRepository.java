@@ -8,4 +8,6 @@ public interface StatusRepository extends JpaRepository<Status, Long> {
     int findMaxSequenceByBoardId(Long boardId);
 
     boolean existsByBoardIdAndTitle(Long id, String title);
+
+    boolean existsById(Long id);
 }

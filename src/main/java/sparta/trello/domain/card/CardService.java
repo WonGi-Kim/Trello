@@ -13,6 +13,9 @@ import sparta.trello.domain.user.UserRepository;
 import sparta.trello.global.exception.CustomException;
 import sparta.trello.global.exception.ErrorCode;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class CardService {
@@ -51,5 +54,44 @@ public class CardService {
         cardRepository.save(card);
 
         return new CardResponseDto(requestDto.getContent(), requestDto.getTitle(), requestDto.getDeadline(), status, user);
+    }
+
+    public List<CardResponseDto> findCardList(Long boardId) {
+        if(!boardRepository.existsById(boardId)){
+            throw new CustomException(ErrorCode.NOT_FOUND_BOARD);
+        }
+        List<Card> cardList = cardRepository.findCardList(boardId);
+        return cardList.stream().map(card -> new CardResponseDto(card.getContent(), card.getTitle(), card.getDeadline(), card.getStatus(), card.getUser()))
+                .collect(Collectors.toList());
+    }
+
+    public List<CardResponseDto> findCardListByStatus(Long boardId, Long statusId) {
+        if(!boardRepository.existsById(boardId)){
+            throw new CustomException(ErrorCode.NOT_FOUND_BOARD);
+        }
+
+        if(!statusRepository.existsById(statusId)){
+            throw new CustomException(ErrorCode.NOT_FOUND_STATUS);
+        }
+
+        List<Card> cardList = cardRepository.findCardListByStatus(boardId, statusId);
+
+        return cardList.stream().map(card -> new CardResponseDto(card.getContent(), card.getTitle(), card.getDeadline(), card.getStatus(), card.getUser()))
+                .collect(Collectors.toList());
+    }
+
+    public List<CardResponseDto> findCardListByUser(String nickname, Long boardId) {
+        if(!userRepository.existsByNickname(nickname)){
+            throw new CustomException(ErrorCode.USER_NICKNAME_NOT_FOUND);
+        }
+
+        if(!boardRepository.existsById(boardId)){
+            throw new CustomException(ErrorCode.NOT_FOUND_BOARD);
+        }
+
+        List<Card> cardList = cardRepository.findCardListByUser(boardId, nickname);
+
+        return cardList.stream().map(card -> new CardResponseDto(card.getContent(), card.getTitle(), card.getDeadline(), card.getStatus(), card.getUser()))
+                .collect(Collectors.toList());
     }
 }
