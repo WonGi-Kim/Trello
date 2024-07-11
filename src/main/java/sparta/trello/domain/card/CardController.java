@@ -1,5 +1,6 @@
 package sparta.trello.domain.card;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +15,7 @@ public class CardController {
     private final CardService cardService;
 
     @PostMapping("/boards/{boardId}/status/{statusId}/cards")
-    public ResponseEntity<CommonResponse<CardResponseDto>> createCard(@RequestBody CardRequestDto requestDto,
+    public ResponseEntity<CommonResponse<CardResponseDto>> createCard(@Valid @RequestBody CardRequestDto requestDto,
                                                                       @PathVariable Long statusId, @PathVariable Long boardId) {
 
         CardResponseDto responseDto = cardService.create(requestDto, statusId, boardId);
