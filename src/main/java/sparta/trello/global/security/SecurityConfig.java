@@ -75,6 +75,7 @@ public class SecurityConfig {
                 request
                         .requestMatchers("/auth/login").anonymous()
                         .requestMatchers("/users/signup").anonymous()
+                        .requestMatchers("/auth/reissue").anonymous()
                         .requestMatchers(HttpMethod.POST, "/boards").hasRole("MANAGER")
                         .requestMatchers(HttpMethod.PUT, "^/boards/\\d+&").hasRole("MANAGER")
                         .requestMatchers(HttpMethod.DELETE, "^/boards/\\d+$").hasRole("MANAGER")

@@ -4,6 +4,7 @@ import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.constraints.Email;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -36,13 +37,13 @@ public class JwtProvider {
 
     }
 
-    public String generateToken(Authentication authentication) {
+    public String generateToken(String email) {
 
         Date curDate = new Date();
         Date expireDate = new Date(curDate.getTime() + EXPIRE_TIME);
 
         return TOKEN_PREFIX + Jwts.builder()
-                .setSubject(authentication.getName())
+                .setSubject(email)
                 .setIssuedAt(curDate)
                 .setExpiration(expireDate)
                 .signWith(key, SignatureAlgorithm.HS256)
