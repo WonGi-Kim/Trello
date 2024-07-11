@@ -23,7 +23,10 @@ public enum ErrorCode {
 
     // Status(Column)
     NOT_FOUND_STATUS_TITLE(HttpStatus.NOT_FOUND, "필수 데이터가 존재하지 않습니다."),
-    ALREADY_EXIST_TITLE(HttpStatus.BAD_REQUEST, "이미 존재하는 컬럼명 입니다.");
+    ALREADY_EXIST_TITLE(HttpStatus.BAD_REQUEST, "이미 존재하는 컬럼명 입니다."),
+
+    // User
+    USERNAME_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다.");
 
     private final HttpStatus status;
     private final String message;
