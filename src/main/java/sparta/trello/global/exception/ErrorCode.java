@@ -39,7 +39,8 @@ public enum ErrorCode {
 
     //Card
     NOT_PERMISSION_DELETE(HttpStatus.UNAUTHORIZED, "삭제할 수 없습니다."),
-    NOT_PERMISSION_UPDATE(HttpStatus.UNAUTHORIZED, "수정할 수 없습니다");
+    NOT_PERMISSION_UPDATE(HttpStatus.UNAUTHORIZED, "수정할 수 없습니다"),
+    NOT_PERMISSION_CHANGE(HttpStatus.UNAUTHORIZED, "변경할 수 없습니다.");
 
     private final HttpStatus status;
     private final String message;

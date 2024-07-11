@@ -62,4 +62,18 @@ public class CardController {
         return ResponseEntity.status(HttpStatus.CREATED).body(new CommonResponse<>("수정 성공", HttpStatus.CREATED.value(), responseDto));
     }
 
+    /**
+     * 가정
+     * 카드 이동 : 프론트에서 카드 칼럼이 변경된 상태 ID, 현재 카드 ID를 받아온 값 -> PathVariable로 넣어줘서 사용하게 만듬.
+     */
+
+    @PutMapping("/cards/{cardId}/orders/{newStatusId}")
+    public ResponseEntity<CommonResponse> changeStatus
+            (@AuthenticationPrincipal UserPrincipal principal, @PathVariable Long cardId, @PathVariable Long newStatusId){
+        User user = principal.getUser();
+        cardService.changeStatus(cardId, newStatusId, user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(new CommonResponse<>("변경 성공", HttpStatus.CREATED.value(), ""));
+    }
+
+
 }

@@ -73,4 +73,8 @@ public class Card extends Timestamped {
     public void updateContent(String content){
         this.content = content;
     }
+
+    public void updateStatus(Long newStatusId){
+        this.status.updateStatusId(newStatusId);
+    }
 }

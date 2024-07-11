@@ -10,6 +10,7 @@ import sparta.trello.domain.card.dto.CardUpdateRequestDto;
 import sparta.trello.domain.card.dto.CardUpdateResponseDto;
 import sparta.trello.domain.status.Status;
 import sparta.trello.domain.status.StatusRepository;
+import sparta.trello.domain.status.StatusService;
 import sparta.trello.domain.user.User;
 import sparta.trello.domain.user.UserRepository;
 import sparta.trello.domain.user.UserService;
@@ -29,12 +30,11 @@ public class CardService {
     private final UserRepository userRepository;
 
     private final UserService userService;
+    private final StatusService statusService;
 
     public CardResponseDto create(CardRequestDto requestDto, Long statusId, Long boardId, User user) {
 
-        Status status = statusRepository.findById(statusId).orElseThrow(
-                () -> new CustomException(ErrorCode.NOT_FOUND_STATUS)
-        );
+        Status status = checkStatus(statusId);
 
         Board board = checkBoard(boardId);
 
@@ -125,6 +125,22 @@ public class CardService {
         return new CardUpdateResponseDto(requestDto.getContent(), requestDto.getNickname(), requestDto.getDeadline());
     }
 
+    public void changeStatus(Long cardId, Long newStatusId, User user) {
+        Card card = checkCard(cardId);
+
+        if(!Objects.equals(card.getUser().getNickname(), user.getNickname())){
+            throw new CustomException(ErrorCode.NOT_PERMISSION_CHANGE);
+        }
+
+        Long pastStatusId = card.getStatus().getId();
+
+        if(!Objects.equals(pastStatusId, newStatusId)){
+           card.updateStatus(newStatusId);
+           cardRepository.save(card);
+        }
+
+    }
+
     public Board checkBoard(Long boardId){
         Board board = boardRepository.findById(boardId).orElseThrow(
                 ()-> new CustomException(ErrorCode.NOT_FOUND_BOARD)
@@ -140,4 +156,10 @@ public class CardService {
         return card;
     }
 
+    public Status checkStatus(Long statusId){
+        Status status = statusRepository.findById(statusId).orElseThrow(
+                () -> new CustomException(ErrorCode.NOT_FOUND_STATUS)
+        );
+        return status;
+    }
 }
