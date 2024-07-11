@@ -6,7 +6,6 @@ import sparta.trello.domain.board.Board;
 import sparta.trello.domain.board.BoardRepository;
 import sparta.trello.domain.card.dto.CardRequestDto;
 import sparta.trello.domain.card.dto.CardResponseDto;
-import sparta.trello.domain.card.dto.NicknameRequestDto;
 import sparta.trello.domain.status.Status;
 import sparta.trello.domain.status.StatusRepository;
 import sparta.trello.domain.user.User;
@@ -57,29 +56,40 @@ public class CardService {
         return new CardResponseDto(requestDto.getContent(), requestDto.getTitle(), requestDto.getDeadline(), status, user);
     }
 
-    public List<CardResponseDto> findCardList() {
-        List<Card> cardList = cardRepository.findAll();
+    public List<CardResponseDto> findCardList(Long boardId) {
+        if(!boardRepository.existsById(boardId)){
+            throw new CustomException(ErrorCode.NOT_FOUND_BOARD);
+        }
+        List<Card> cardList = cardRepository.findCardList(boardId);
         return cardList.stream().map(card -> new CardResponseDto(card.getContent(), card.getTitle(), card.getDeadline(), card.getStatus(), card.getUser()))
                 .collect(Collectors.toList());
     }
 
-    public List<CardResponseDto> findCardListByStatus(Long statusId) {
+    public List<CardResponseDto> findCardListByStatus(Long boardId, Long statusId) {
+        if(!boardRepository.existsById(boardId)){
+            throw new CustomException(ErrorCode.NOT_FOUND_BOARD);
+        }
+
         if(!statusRepository.existsById(statusId)){
             throw new CustomException(ErrorCode.NOT_FOUND_STATUS);
         }
 
-        List<Card> cardList = cardRepository.findCardListByStatus(statusId);
+        List<Card> cardList = cardRepository.findCardListByStatus(boardId, statusId);
 
         return cardList.stream().map(card -> new CardResponseDto(card.getContent(), card.getTitle(), card.getDeadline(), card.getStatus(), card.getUser()))
                 .collect(Collectors.toList());
     }
 
-    public List<CardResponseDto> findCardListByUser(NicknameRequestDto requestDto) {
-        if(!userRepository.existsByNickname(requestDto.getNickname())){
+    public List<CardResponseDto> findCardListByUser(String nickname, Long boardId) {
+        if(!userRepository.existsByNickname(nickname)){
             throw new CustomException(ErrorCode.USER_NICKNAME_NOT_FOUND);
         }
 
-        List<Card> cardList = cardRepository.findCardListByUser(requestDto.getNickname());
+        if(!boardRepository.existsById(boardId)){
+            throw new CustomException(ErrorCode.NOT_FOUND_BOARD);
+        }
+
+        List<Card> cardList = cardRepository.findCardListByUser(boardId, nickname);
 
         return cardList.stream().map(card -> new CardResponseDto(card.getContent(), card.getTitle(), card.getDeadline(), card.getStatus(), card.getUser()))
                 .collect(Collectors.toList());
