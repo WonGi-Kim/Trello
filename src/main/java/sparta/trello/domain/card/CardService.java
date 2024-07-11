@@ -10,10 +10,12 @@ import sparta.trello.domain.status.Status;
 import sparta.trello.domain.status.StatusRepository;
 import sparta.trello.domain.user.User;
 import sparta.trello.domain.user.UserRepository;
+import sparta.trello.global.common.CommonResponse;
 import sparta.trello.global.exception.CustomException;
 import sparta.trello.global.exception.ErrorCode;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -94,4 +96,18 @@ public class CardService {
         return cardList.stream().map(card -> new CardResponseDto(card.getContent(), card.getTitle(), card.getDeadline(), card.getStatus(), card.getUser()))
                 .collect(Collectors.toList());
     }
+
+    public void deleteCard(Long boardId, Long cardId) {
+        Board board = boardRepository.findById(boardId).orElseThrow(
+                () -> new CustomException(ErrorCode.NOT_FOUND_BOARD)
+        );
+
+        Card card = cardRepository.findByIdAndBoardId(boardId, cardId).orElseThrow(
+                () -> new CustomException(ErrorCode.NOT_FOUND_CARD)
+        );
+
+        cardRepository.delete(card);
+    }
+
+
 }
