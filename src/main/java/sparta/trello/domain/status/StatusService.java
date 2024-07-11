@@ -82,6 +82,10 @@ public class StatusService {
         statusRepository.saveAll(statusList);
     }
 
+    public List<Status> getStatusesByBoardId(Long boardId) {
+        return statusRepository.findByBoardIdOrderBySequence(boardId);
+    }
+
     private void checkManager(String userRole) {
         if(!userRole.equals("MANAGER")) {
             throw new CustomException(ErrorCode.UNAUTHORIZED);

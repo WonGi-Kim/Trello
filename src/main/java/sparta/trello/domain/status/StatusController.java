@@ -47,4 +47,9 @@ public class StatusController {
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
+    @GetMapping("/boards/{boardId}/status")
+    public List<Status> getStatuses(@PathVariable("boardId") Long boardId) {
+        return statusService.getStatusesByBoardId(boardId);
+    }
+
 }
