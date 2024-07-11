@@ -1,35 +1,33 @@
 package sparta.trello.domain.comment;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import sparta.trello.domain.card.Card;
 import sparta.trello.domain.card.CardRepository;
-import sparta.trello.domain.user.User;
-import sparta.trello.domain.user.UserRepository;
+import sparta.trello.domain.comment.dto.CommentRequestDto;
+import sparta.trello.global.exception.CustomException;
+import sparta.trello.global.exception.ErrorCode;
 
 @Service
+@RequiredArgsConstructor
 public class CommentService {
     private final CardRepository cardRepository;
-    private final UserRepository userRepository;
     private final CommentRepository commentRepository;
 
-    public CommentService(CardRepository cardRepository, UserRepository userRepository, CommentRepository commentRepository) {
-        this.cardRepository = cardRepository;
-        this.userRepository = userRepository;
-        this.commentRepository = commentRepository;
-    }
-
-    public Comment addComment(Long cardId, Long userId, CommentRequestDto requestDto) {
+    public Comment addComment(Long cardId, CommentRequestDto requestDto) {
+        // 카드 조회
         Card card = cardRepository.findById(cardId)
-                .orElseThrow(() -> new IllegalArgumentException("Card not found with id: " + cardId)); // cardId로 카드 찾고, 없으면 예외 던짐
+                .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_CARD));
 
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found with id: " + userId)); // userId로 사용자 찾고, 없으면 예외 던짐
+        // 사용자 조회 (로그인 체크)
+//        User user = userRepository.findById(userId)
+//                .orElseThrow(() -> new CustomException(ErrorCode.UNAUTHORIZED));
 
+        // 댓글 생성
         Comment comment = Comment.builder()
-                .card(card) // 댓글의 카드 설정
-                .user(user) // 댓글의 사용자 설정
-                .content(requestDto.getContent()) // 댓글의 내용 설정
-                .build(); // Comment 객체 생성
+                .card(card)
+                .content(requestDto.getContent())
+                .build();
 
         return commentRepository.save(comment);
     }
