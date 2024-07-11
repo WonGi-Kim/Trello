@@ -35,7 +35,10 @@ public enum ErrorCode {
     USER_NICKNAME_NOT_FOUND(HttpStatus.NOT_FOUND, "존재하지 않는 닉네임입니다."),
 
     // Comment
-    NOT_FOUND_CARD(HttpStatus.NOT_FOUND, "카드를 찾을 수 없습니다.");
+    NOT_FOUND_CARD(HttpStatus.NOT_FOUND, "카드를 찾을 수 없습니다."),
+
+    //Card
+    NOT_PERMISSION_DELETE(HttpStatus.UNAUTHORIZED, "삭제할 수 없습니다.");
 
     private final HttpStatus status;
     private final String message;
