@@ -2,7 +2,6 @@ package sparta.trello.domain.status;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import sparta.trello.domain.board.Board;
 import sparta.trello.domain.board.BoardRepository;
 import sparta.trello.domain.status.dto.CreateStatusRequestDto;
@@ -45,7 +44,6 @@ public class StatusService {
         return responseDto;
     }
 
-    @Transactional
     public void deleteStatus(Long boardId, Long statusId, User user) {
         Board board = boardRepository.findById(boardId).orElseThrow(()-> new CustomException(ErrorCode.NOT_FOUND_BOARD));
         Status status = statusRepository.findByIdAndBoardId(statusId, board.getId()).orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_STATUS));
