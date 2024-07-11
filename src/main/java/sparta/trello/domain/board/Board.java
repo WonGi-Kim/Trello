@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import sparta.trello.domain.user.User;
 import sparta.trello.global.Timestamped;
 
 @Entity
@@ -22,11 +23,16 @@ public class Board extends Timestamped {
     @Column(nullable = false)
     private String introduction;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
     @Builder
-    public Board(String boardName, String introduction) {
+    public Board(String boardName, String introduction, User user) {
 
         this.boardName = boardName;
         this.introduction = introduction;
+        this.user = user;
 
     }
 }
