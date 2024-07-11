@@ -12,14 +12,14 @@ import sparta.trello.domain.status.dto.CreateStatusRequestDto;
 import sparta.trello.domain.status.dto.CreateStatusResponseDto;
 import sparta.trello.global.common.CommonResponse;
 
-@Valid
+
 @RestController
 public class StatusController {
     @Autowired
     private StatusService statusService;
 
     @PostMapping("/boards/{boardId}/status")
-    public ResponseEntity<CommonResponse> createStatus(@PathVariable("boardId") Long boardId, @RequestBody CreateStatusRequestDto requestDto) {
+    public ResponseEntity<CommonResponse> createStatus(@PathVariable("boardId") Long boardId, @Valid @RequestBody CreateStatusRequestDto requestDto) {
         CreateStatusResponseDto responseDto = statusService.createStatus(boardId, requestDto);
         CommonResponse response = new CommonResponse<>("컬럼 생성 완료", 201, responseDto);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
