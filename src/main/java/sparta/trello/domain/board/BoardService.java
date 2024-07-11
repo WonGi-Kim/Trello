@@ -8,6 +8,7 @@ import sparta.trello.domain.user.User;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -31,11 +32,17 @@ public class BoardService {
     public List<BoardResponseDto> getBoards(User user) {
         List<Board> boardList = new ArrayList<>();
         boardList.addAll(boardRepository.findByUser(user));
-        boardList.addAll(inviteRepository.findByUser(user));
+        boardList.addAll(getBoardsByInvite(user));
 
         return boardList.stream()
                 .map(BoardResponseDto::new)
                 .toList();
     }
 
+    private List<Board> getBoardsByInvite(User user) {
+        List<Invite> invites = inviteRepository.findByUser(user);
+        return invites.stream()
+                .map(Invite::getBoard)
+                .collect(Collectors.toList());
+    }
 }
