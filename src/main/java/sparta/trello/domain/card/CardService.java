@@ -13,6 +13,9 @@ import sparta.trello.domain.user.UserRepository;
 import sparta.trello.global.exception.CustomException;
 import sparta.trello.global.exception.ErrorCode;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 public class CardService {
@@ -51,5 +54,11 @@ public class CardService {
         cardRepository.save(card);
 
         return new CardResponseDto(requestDto.getContent(), requestDto.getTitle(), requestDto.getDeadline(), status, user);
+    }
+
+    public List<CardResponseDto> findCardList() {
+        List<Card> cardList = cardRepository.findAll();
+        return cardList.stream().map(card -> new CardResponseDto(card.getContent(), card.getTitle(), card.getDeadline(), card.getStatus(), card.getUser()))
+                .collect(Collectors.toList());
     }
 }
