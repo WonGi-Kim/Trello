@@ -6,7 +6,6 @@ import sparta.trello.domain.board.Board;
 import sparta.trello.domain.board.BoardRepository;
 import sparta.trello.domain.status.dto.CreateStatusRequestDto;
 import sparta.trello.domain.status.dto.CreateStatusResponseDto;
-import sparta.trello.global.common.CommonResponse;
 import sparta.trello.global.exception.CustomException;
 import sparta.trello.global.exception.ErrorCode;
 
@@ -18,8 +17,8 @@ public class StatusService {
     @Autowired
     private BoardRepository boardRepository;
 
-    public CommonResponse createStatus(Long boardId, CreateStatusRequestDto requestDto) {
-        Board board = boardRepository.findById(boardId).orElseThrow(()-> new IllegalArgumentException("Board not found"));
+    public CreateStatusResponseDto createStatus(Long boardId, CreateStatusRequestDto requestDto) {
+        Board board = boardRepository.findById(boardId).orElseThrow(()-> new CustomException(ErrorCode.NOT_FOUND_BOARD));
 
         int maxSequence = statusRepository.findMaxSequenceByBoardId(board.getId());
         int createdSequence = maxSequence + 1;
@@ -30,12 +29,8 @@ public class StatusService {
                 .board(board)
                 .build();
 
-        if(statusRepository.existsByBoardIdAndStatusTitle(board.getId(), status.getTitle())) {
+        if(statusRepository.existsByBoardIdAndTitle(board.getId(), status.getTitle())) {
             throw new CustomException(ErrorCode.ALREADY_EXIST_TITLE);
-        }
-
-        if(status.getTitle() == null) {
-            throw new CustomException(ErrorCode.NOT_FOUND_STATUS_TITLE);
         }
 
         Status savedStatus = statusRepository.save(status);
@@ -45,6 +40,6 @@ public class StatusService {
                 .createdAt(savedStatus.getCreatedAt())
                 .build();
 
-        return new CommonResponse<>("보드 생성 완료", 201, responseDto);
+        return responseDto;
     }
 }
