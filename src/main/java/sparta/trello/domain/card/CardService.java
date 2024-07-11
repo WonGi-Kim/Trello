@@ -31,9 +31,7 @@ public class CardService {
                 () -> new CustomException(ErrorCode.NOT_FOUND_STATUS)
         );
 
-        Board board = boardRepository.findById(boardId).orElseThrow(
-                ()-> new CustomException(ErrorCode.NOT_FOUND_BOARD)
-        );
+        Board board = checkBoard(boardId);
 
         User user = userRepository.findById(1L).orElseThrow(
                 ()-> new CustomException(ErrorCode.USERNAME_NOT_FOUND)
@@ -97,11 +95,9 @@ public class CardService {
     }
 
     public void deleteCard(Long boardId, Long cardId, User user) {
-        Board board = boardRepository.findById(boardId).orElseThrow(
-                () -> new CustomException(ErrorCode.NOT_FOUND_BOARD)
-        );
+        checkBoard(boardId);
 
-        Card card = cardRepository.findByIdAndBoardId(cardId, boardId).orElseThrow(
+        Card card = cardRepository.findById(cardId).orElseThrow(
                 () -> new CustomException(ErrorCode.NOT_FOUND_CARD)
         );
 
@@ -112,5 +108,11 @@ public class CardService {
         cardRepository.delete(card);
     }
 
+    public Board checkBoard(Long boardId){
+        Board board = boardRepository.findById(boardId).orElseThrow(
+                ()-> new CustomException(ErrorCode.NOT_FOUND_BOARD)
+        );
+        return board;
+    }
 
 }
