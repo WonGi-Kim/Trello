@@ -4,8 +4,10 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Getter
 @Entity
@@ -21,19 +23,23 @@ public class Token {
     private String token;
 
     @Column
-    private LocalDateTime expires;
+    private Date expires;
 
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
 
     @Builder
-    public Token(String token, LocalDateTime expires, User user) {
+    public Token(String token, Date expires, User user) {
 
         this.token = token;
         this.expires = expires;
         this.user = user;
 
+    }
+
+    public void updateExpires(Date expires) {
+        this.expires = expires;
     }
 
 }

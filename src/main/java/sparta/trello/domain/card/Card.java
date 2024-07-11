@@ -10,6 +10,7 @@ import sparta.trello.domain.status.Status;
 import sparta.trello.domain.user.User;
 import sparta.trello.global.Timestamped;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -33,7 +34,7 @@ public class Card extends Timestamped {
     private String content;
 
     @Column
-    private Date deadline;
+    private LocalDate deadline;
 
     @OneToMany(mappedBy = "card", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
@@ -51,7 +52,7 @@ public class Card extends Timestamped {
     private Board board;
 
     @Builder
-    public Card(String title, int sequence, String content, Date deadline, Status status, User user, Board board) {
+    public Card(String title, int sequence, String content, LocalDate deadline, Status status, User user, Board board) {
 
         this.title = title;
         this.sequence = sequence;
