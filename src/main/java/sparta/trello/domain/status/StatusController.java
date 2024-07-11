@@ -1,5 +1,6 @@
 package sparta.trello.domain.status;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import sparta.trello.domain.status.dto.CreateStatusRequestDto;
 import sparta.trello.domain.status.dto.CreateStatusResponseDto;
 import sparta.trello.global.common.CommonResponse;
 
+@Valid
 @RestController
 public class StatusController {
     @Autowired
