@@ -13,21 +13,35 @@ public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
+    private final static String ADMIN_CODE = "zhemtpwnfdpsmseoajflrkdlTek";
+
     public SignupResponseDto signup(SignupRequestDto requestDto) {
 
         if(userRepository.findByEmail(requestDto.getEmail()).isPresent()) {
             throw new CustomException(ErrorCode.ALREADY_EXISTING_USER);
         }
 
+        User.Role role = isAdmin(requestDto.getManagercode()) ? User.Role.MANAGER :User.Role.USER;
+
         User user = User.builder()
                 .email(requestDto.getEmail())
                 .password(passwordEncoder.encode(requestDto.getPassword()))
                 .nickname(requestDto.getNickname())
-                .role(User.Role.USER)
+                .role(role)
                 .build();
 
         User savedUser = userRepository.save(user);
         return new SignupResponseDto(savedUser);
+
+    }
+
+    private boolean isAdmin(String managerCode) {
+
+        if (managerCode != null) {
+            return managerCode.equals(ADMIN_CODE);
+        } else {
+            return false;
+        }
 
     }
 

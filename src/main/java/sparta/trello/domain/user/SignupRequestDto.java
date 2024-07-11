@@ -20,6 +20,6 @@ public class SignupRequestDto {
     @NotBlank(message = " nickname은 비워둘 수 없습니다.")
     private String nickname;
 
-    private String admincode;
+    private String managercode;
 
 }
