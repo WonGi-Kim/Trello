@@ -1,0 +1,28 @@
+### 회원가입
+POST http://localhost:8080/users/signup
+Content-Type: application/json
+
+{
+  "email": "test@gmail.com",
+  "password" : "passWord123!",
+  "nickname": "nickname"
+}
+
+### 로그인
+POST http://localhost:8080/auth/login
+Content-Type: application/json
+
+{
+  "email": "test@gmail.com",
+  "password": "passWord123!"
+}
+
+> {%
+    client.global.set("access_token", response.body.result.access);
+    client.global.set("refresh_token", response.body.result.refresh);
+%}
+
+### 로그아웃
+PATCH http://localhost:8080/auth/logout
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
