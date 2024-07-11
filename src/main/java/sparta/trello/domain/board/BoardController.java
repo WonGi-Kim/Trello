@@ -7,10 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import sparta.trello.domain.board.dto.BoardRequestDto;
 import sparta.trello.domain.board.dto.BoardResponseDto;
 import sparta.trello.global.common.CommonResponse;
@@ -44,6 +41,19 @@ public class BoardController {
                 "보드 조회 성공",
                 HttpStatus.OK.value(),
                 boardService.getBoards(userPrincipal.getUser())
+        );
+        return ResponseEntity.ok().body(commonResponseDto);
+    }
+
+    @Operation(summary = "updateBoard", description = "보드 업데이트 기능입니다.")
+    @PutMapping("/boards/{boardId}")
+    public ResponseEntity<CommonResponse<BoardResponseDto>> updateBoard(@Valid @RequestBody BoardRequestDto boardRequestDto,
+                                                                        @PathVariable Long boardId,
+                                                                        @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        CommonResponse<BoardResponseDto> commonResponseDto = new CommonResponse<>(
+                "보드 업데이트 성공",
+                HttpStatus.OK.value(),
+                boardService.updateBoard(boardRequestDto, boardId, userPrincipal.getUser())
         );
         return ResponseEntity.ok().body(commonResponseDto);
     }

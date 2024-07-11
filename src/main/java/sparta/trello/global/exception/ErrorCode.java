@@ -38,7 +38,10 @@ public enum ErrorCode {
     NOT_FOUND_CARD(HttpStatus.NOT_FOUND, "카드를 찾을 수 없습니다."),
 
     //Card
-    NOT_PERMISSION_DELETE(HttpStatus.UNAUTHORIZED, "삭제할 수 없습니다.");
+    NOT_PERMISSION_DELETE(HttpStatus.UNAUTHORIZED, "삭제할 수 없습니다."),
+
+    // Board
+    FORBIDDEN_BOARD(HttpStatus.FORBIDDEN, "해당 보드 권한이 없습니다.");
 
     private final HttpStatus status;
     private final String message;

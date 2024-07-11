@@ -17,11 +17,11 @@ public class Invite extends Timestamped {
     @Column(name = "invite_id")
     private Long id;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "board_id")
     private Board board;
 
