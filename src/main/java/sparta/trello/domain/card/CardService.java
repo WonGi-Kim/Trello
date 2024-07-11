@@ -36,7 +36,7 @@ public class CardService {
         );
 
         int size = cardRepository.findAll().size();
-        int seq = (size+1) * 1024;
+        int seq = size + 1;
 
         Card card = Card.builder()
                 .status(status)
