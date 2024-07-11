@@ -6,15 +6,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
-import sparta.trello.global.exception.CustomException;
 import sparta.trello.global.security.JwtProvider;
 import sparta.trello.global.security.UserPrincipal;
 
 import java.util.Date;
 import java.util.Optional;
-import java.util.UUID;
-
-import static jakarta.persistence.GenerationType.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -67,6 +63,12 @@ public class AuthService {
         }
 
         return token;
+
+    }
+
+    public void logout(User user) {
+
+        tokenRepository.findByUserId(user.getId()).ifPresent(tokenRepository::delete);
 
     }
 }
