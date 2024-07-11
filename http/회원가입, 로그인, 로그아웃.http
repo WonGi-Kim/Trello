@@ -1,0 +1,53 @@
+### 회원가입 - 유저
+POST http://localhost:8080/users/signup
+Content-Type: application/json
+
+{
+  "email": "test@gmail.com",
+  "password" : "passWord123!",
+  "nickname": "nickname"
+}
+
+### 회원가입 - 관리자
+POST http://localhost:8080/users/signup
+Content-Type: application/json
+
+{
+  "email": "admin@gmail.com",
+  "password" : "passWord123!",
+  "nickname": "adminname",
+  "managercode": "zhemtpwnfdpsmseoajflrkdlTek"
+}
+
+### 로그인 - 유저
+POST http://localhost:8080/auth/login
+Content-Type: application/json
+
+{
+  "email": "test@gmail.com",
+  "password": "passWord123!"
+}
+
+> {%
+    client.global.set("access_token", response.body.result.access);
+    client.global.set("refresh_token", response.body.result.refresh);
+%}
+
+### 로그인 - 관리자
+POST http://localhost:8080/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@gmail.com",
+  "password": "passWord123!"
+}
+
+> {%
+    client.global.set("access_token", response.body.result.access);
+    client.global.set("refresh_token", response.body.result.refresh);
+%}
+
+### 로그아웃
+PATCH http://localhost:8080/auth/logout
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
