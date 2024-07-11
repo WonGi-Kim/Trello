@@ -21,9 +21,9 @@ public class CardService {
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
 
-    public CardResponseDto create(CardRequestDto requestDto, Long columnId, Long boardId) {
+    public CardResponseDto create(CardRequestDto requestDto, Long statusId, Long boardId) {
 
-        Status status = statusRepository.findById(columnId).orElseThrow(
+        Status status = statusRepository.findById(statusId).orElseThrow(
                 () -> new CustomException(ErrorCode.NOT_FOUND_STATUS)
         );
 
@@ -35,7 +35,7 @@ public class CardService {
                 ()-> new CustomException(ErrorCode.USERNAME_NOT_FOUND)
         );
 
-        int size = cardRepository.findAll().size();
+        int size = cardRepository.findMaxCardSizeByStatusId(statusId, boardId);
         int seq = size + 1;
 
         Card card = Card.builder()
@@ -52,7 +52,4 @@ public class CardService {
 
         return new CardResponseDto(requestDto.getContent(), requestDto.getTitle(), requestDto.getDeadline(), status, user);
     }
-
-
-
 }
