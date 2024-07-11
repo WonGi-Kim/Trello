@@ -26,6 +26,7 @@ public enum ErrorCode {
     NOT_FOUND_STATUS_TITLE(HttpStatus.NOT_FOUND, "필수 데이터가 존재하지 않습니다."),
     ALREADY_EXIST_TITLE(HttpStatus.BAD_REQUEST, "이미 존재하는 컬럼명 입니다."),
     NOT_FOUND_BOARD(HttpStatus.NOT_FOUND, "보드를 찾을 수 없습니다."),
+    NOT_FOUND_STATUS(HttpStatus.NOT_FOUND, "칼럼을 찾을 수 없습니다."),
 
     // User
     USERNAME_NOT_FOUND(HttpStatus.NOT_FOUND, "사용자를 찾을 수 없습니다."),
