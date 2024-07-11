@@ -12,8 +12,8 @@ import sparta.trello.domain.user.User;
 import sparta.trello.global.exception.CustomException;
 import sparta.trello.global.exception.ErrorCode;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -66,6 +66,7 @@ public class StatusService {
         checkManager(user.getRole().getValue());
 
         // 프론트에서 보낸 순서로 Status 엔티티의 sequence 값을 업데이트
+        // ToDo: MN 복잡도 해결하
         for (StatusUpdateRequestDto requestDto : currentStatusSequence) {
             for (Status status : statusList) {
                 if (status.getId().equals(requestDto.getStatusId())) {
@@ -81,19 +82,15 @@ public class StatusService {
 
     public List<StatusResponseDto> getStatusesByBoardId(Long boardId) {
         List<Status> statuses = statusRepository.findByBoardIdOrderBySequence(boardId);
-        List<StatusResponseDto> responseDtos = new ArrayList<>();
 
-        for (Status status : statuses) {
-            StatusResponseDto responseDto = StatusResponseDto.builder()
-                    .statusId(status.getId())
-                    .title(status.getTitle())
-                    .sequence(status.getSequence())
-                    .createAt(status.getCreatedAt())
-                    .build();
-            responseDtos.add(responseDto);
-        }
-
-        return responseDtos;
+        return statuses.stream()
+                .map(status -> new StatusResponseDto(
+                        status.getId(),
+                        status.getTitle(),
+                        status.getSequence(),
+                        status.getCreatedAt()
+                ))
+                .collect(Collectors.toList());
     }
 
     private void checkManager(String userRole) {

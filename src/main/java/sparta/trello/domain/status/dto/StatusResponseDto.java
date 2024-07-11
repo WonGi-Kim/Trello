@@ -1,6 +1,5 @@
 package sparta.trello.domain.status.dto;
 
-import lombok.Builder;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -12,7 +11,6 @@ public class StatusResponseDto {
     private int sequence;
     private LocalDateTime createAt;
 
-    @Builder
     public StatusResponseDto(Long statusId, String title, int sequence, LocalDateTime createAt) {
         this.statusId = statusId;
         this.title = title;

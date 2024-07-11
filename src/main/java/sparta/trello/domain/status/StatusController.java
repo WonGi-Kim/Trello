@@ -8,7 +8,6 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import sparta.trello.domain.status.dto.CreateStatusRequestDto;
 import sparta.trello.domain.status.dto.CreateStatusResponseDto;
-import sparta.trello.domain.status.dto.StatusResponseDto;
 import sparta.trello.domain.status.dto.StatusUpdateRequestDto;
 import sparta.trello.global.common.CommonResponse;
 import sparta.trello.global.security.UserPrincipal;
@@ -49,8 +48,9 @@ public class StatusController {
     }
 
     @GetMapping("/boards/{boardId}/status")
-    public List<StatusResponseDto> getStatuses(@PathVariable("boardId") Long boardId) {
-        return statusService.getStatusesByBoardId(boardId);
+    public ResponseEntity<CommonResponse> getStatuses(@PathVariable("boardId") Long boardId) {
+        CommonResponse response = new CommonResponse<>("컬럼 조회 완료", 200, statusService.getStatusesByBoardId(boardId));
+        return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
 }
