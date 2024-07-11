@@ -45,4 +45,8 @@ public class UserService {
 
     }
 
+    public User updateNickname(User user, String nickname) {
+        user.updateNickname(nickname);
+        return userRepository.save(user);
+    }
 }

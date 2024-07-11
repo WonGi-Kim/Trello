@@ -6,10 +6,13 @@ import sparta.trello.domain.board.Board;
 import sparta.trello.domain.board.BoardRepository;
 import sparta.trello.domain.card.dto.CardRequestDto;
 import sparta.trello.domain.card.dto.CardResponseDto;
+import sparta.trello.domain.card.dto.CardUpdateRequestDto;
+import sparta.trello.domain.card.dto.CardUpdateResponseDto;
 import sparta.trello.domain.status.Status;
 import sparta.trello.domain.status.StatusRepository;
 import sparta.trello.domain.user.User;
 import sparta.trello.domain.user.UserRepository;
+import sparta.trello.domain.user.UserService;
 import sparta.trello.global.exception.CustomException;
 import sparta.trello.global.exception.ErrorCode;
 
@@ -24,6 +27,8 @@ public class CardService {
     private final StatusRepository statusRepository;
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
+
+    private final UserService userService;
 
     public CardResponseDto create(CardRequestDto requestDto, Long statusId, Long boardId, User user) {
 
@@ -93,9 +98,7 @@ public class CardService {
     public void deleteCard(Long boardId, Long cardId, User user) {
         checkBoard(boardId);
 
-        Card card = cardRepository.findById(cardId).orElseThrow(
-                () -> new CustomException(ErrorCode.NOT_FOUND_CARD)
-        );
+        Card card = checkCard(cardId);
 
         if(!Objects.equals(user.getNickname(), card.getUser().getNickname())){
             throw new CustomException(ErrorCode.NOT_PERMISSION_DELETE);
@@ -104,11 +107,37 @@ public class CardService {
         cardRepository.delete(card);
     }
 
+    public CardUpdateResponseDto updateCard(Long boardId, Long cardId, CardUpdateRequestDto requestDto, User user) {
+        checkBoard(boardId);
+
+        Card card = checkCard(cardId);
+
+        if(!Objects.equals(card.getUser().getNickname(), user.getNickname())){
+            throw new CustomException(ErrorCode.NOT_PERMISSION_UPDATE);
+        }
+
+        userService.updateNickname(user, requestDto.getNickname());
+
+        card.updateContent(requestDto.getContent());
+        card.updateDeadline(requestDto.getDeadline());
+
+        cardRepository.save(card);
+        return new CardUpdateResponseDto(requestDto.getContent(), requestDto.getNickname(), requestDto.getDeadline());
+    }
+
     public Board checkBoard(Long boardId){
         Board board = boardRepository.findById(boardId).orElseThrow(
                 ()-> new CustomException(ErrorCode.NOT_FOUND_BOARD)
         );
         return board;
+    }
+
+    public Card checkCard(Long cardId){
+        Card card = cardRepository.findById(cardId).orElseThrow(
+                () -> new CustomException(ErrorCode.NOT_FOUND_CARD)
+        );
+
+        return card;
     }
 
 }

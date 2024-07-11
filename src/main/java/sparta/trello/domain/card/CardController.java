@@ -5,11 +5,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-import sparta.trello.domain.card.dto.CardRequestDto;
-import sparta.trello.domain.card.dto.CardResponseDto;
-import sparta.trello.domain.card.dto.NicknameRequestDto;
+import sparta.trello.domain.card.dto.*;
 import sparta.trello.domain.user.User;
 import sparta.trello.global.common.CommonResponse;
 import sparta.trello.global.security.UserPrincipal;
@@ -52,8 +51,15 @@ public class CardController {
     public ResponseEntity<CommonResponse> deleteCard(@AuthenticationPrincipal UserPrincipal principal, @PathVariable Long boardId, @PathVariable Long cardId){
         User user = principal.getUser();
         cardService.deleteCard(boardId, cardId, user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new CommonResponse("삭제 성공", HttpStatus.CREATED.value(), ""));
+        return ResponseEntity.status(HttpStatus.CREATED).body(new CommonResponse<>("삭제 성공", HttpStatus.CREATED.value(), ""));
     }
 
+    @PatchMapping("/boards/{boardId}/cards/{cardId}")
+    public ResponseEntity<CommonResponse<CardUpdateResponseDto>> updateCard
+            (@AuthenticationPrincipal UserPrincipal principal, @PathVariable Long boardId, @PathVariable Long cardId, @RequestBody CardUpdateRequestDto requestDto){
+        User user = principal.getUser();
+        CardUpdateResponseDto responseDto = cardService.updateCard(boardId, cardId, requestDto, user);
+        return ResponseEntity.status(HttpStatus.CREATED).body(new CommonResponse<>("수정 성공", HttpStatus.CREATED.value(), responseDto));
+    }
 
 }

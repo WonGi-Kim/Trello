@@ -53,7 +53,6 @@ public class Card extends Timestamped {
 
     @Builder
     public Card(String title, int sequence, String content, LocalDate deadline, Status status, User user, Board board) {
-
         this.title = title;
         this.sequence = sequence;
         this.content = content;
@@ -61,6 +60,17 @@ public class Card extends Timestamped {
         this.status = status;
         this.user = user;
         this.board = board;
+    }
 
+    public void updateDeadline(LocalDate deadline){
+        this.deadline = deadline;
+    }
+
+    public void updateTitle(String title){
+        this.title = title;
+    }
+
+    public void updateContent(String content){
+        this.content = content;
     }
 }
