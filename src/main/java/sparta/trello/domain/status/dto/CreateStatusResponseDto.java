@@ -1,11 +1,11 @@
 package sparta.trello.domain.status.dto;
 
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 
-@Getter
+@Data
 public class CreateStatusResponseDto {
     private String title;
     private LocalDateTime createdAt;

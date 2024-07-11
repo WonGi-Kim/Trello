@@ -1,28 +1,34 @@
 package sparta.trello.domain.status;
 
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import sparta.trello.domain.status.dto.CreateStatusRequestDto;
 import sparta.trello.domain.status.dto.CreateStatusResponseDto;
 import sparta.trello.global.common.CommonResponse;
+import sparta.trello.global.security.UserPrincipal;
 
 
 @RestController
+@RequiredArgsConstructor
 public class StatusController {
-    @Autowired
-    private StatusService statusService;
+    private final StatusService statusService;
 
     @PostMapping("/boards/{boardId}/status")
-    public ResponseEntity<CommonResponse> createStatus(@PathVariable("boardId") Long boardId, @Valid @RequestBody CreateStatusRequestDto requestDto) {
-        CreateStatusResponseDto responseDto = statusService.createStatus(boardId, requestDto);
+    public ResponseEntity<CommonResponse> createStatus(@PathVariable("boardId") Long boardId, @Valid @RequestBody CreateStatusRequestDto requestDto, UserPrincipal principal) {
+        // ToDo : User정보 받아올 수 있도록 추가
+        CreateStatusResponseDto responseDto = statusService.createStatus(boardId, requestDto, principal.getUser());
         CommonResponse response = new CommonResponse<>("컬럼 생성 완료", 201, responseDto);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+    @DeleteMapping("/boards/{boardId}/status/{statusId}")
+    public ResponseEntity<CommonResponse> deleteStatus(@PathVariable("boardId") Long boardId, @PathVariable("statusId") Long statusId, UserPrincipal principal) {
+        statusService.deleteStatus(boardId, statusId, principal.getUser());
+        CommonResponse response = new CommonResponse<>("컬럼 삭제 완료", 200, "");
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 }
