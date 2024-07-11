@@ -22,10 +22,10 @@ public class CardController {
     private final CardService cardService;
 
     @PostMapping("/boards/{boardId}/status/{statusId}/cards")
-    public ResponseEntity<CommonResponse<CardResponseDto>> createCard(@Valid @RequestBody CardRequestDto requestDto,
-                                                                      @PathVariable Long statusId, @PathVariable Long boardId) {
-
-        CardResponseDto responseDto = cardService.create(requestDto, statusId, boardId);
+    public ResponseEntity<CommonResponse<CardResponseDto>> createCard
+            (@AuthenticationPrincipal UserPrincipal principal, @Valid @RequestBody CardRequestDto requestDto, @PathVariable Long statusId, @PathVariable Long boardId) {
+        User user = principal.getUser();
+        CardResponseDto responseDto = cardService.create(requestDto, statusId, boardId, user);
         return ResponseEntity.status(HttpStatus.CREATED).body(new CommonResponse<>("카드 생성 성공", HttpStatus.CREATED.value(), responseDto));
     }
 
