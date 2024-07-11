@@ -6,11 +6,13 @@ import sparta.trello.domain.board.Board;
 import sparta.trello.domain.board.BoardRepository;
 import sparta.trello.domain.status.dto.CreateStatusRequestDto;
 import sparta.trello.domain.status.dto.CreateStatusResponseDto;
+import sparta.trello.domain.status.dto.StatusResponseDto;
 import sparta.trello.domain.status.dto.StatusUpdateRequestDto;
 import sparta.trello.domain.user.User;
 import sparta.trello.global.exception.CustomException;
 import sparta.trello.global.exception.ErrorCode;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -82,8 +84,21 @@ public class StatusService {
         statusRepository.saveAll(statusList);
     }
 
-    public List<Status> getStatusesByBoardId(Long boardId) {
-        return statusRepository.findByBoardIdOrderBySequence(boardId);
+    public List<StatusResponseDto> getStatusesByBoardId(Long boardId) {
+        List<Status> statuses = statusRepository.findByBoardIdOrderBySequence(boardId);
+        List<StatusResponseDto> dtos = new ArrayList<>();
+
+        for (Status status : statuses) {
+            StatusResponseDto dto = StatusResponseDto.builder()
+                    .statusId(status.getId())
+                    .title(status.getTitle())
+                    .sequence(status.getSequence())
+                    .createAt(status.getCreatedAt())
+                    .build();
+            dtos.add(dto);
+        }
+
+        return dtos;
     }
 
     private void checkManager(String userRole) {
