@@ -10,7 +10,6 @@ import sparta.trello.domain.status.Status;
 import sparta.trello.domain.status.StatusRepository;
 import sparta.trello.domain.user.User;
 import sparta.trello.domain.user.UserRepository;
-import sparta.trello.global.common.CommonResponse;
 import sparta.trello.global.exception.CustomException;
 import sparta.trello.global.exception.ErrorCode;
 
@@ -97,14 +96,18 @@ public class CardService {
                 .collect(Collectors.toList());
     }
 
-    public void deleteCard(Long boardId, Long cardId) {
+    public void deleteCard(Long boardId, Long cardId, User user) {
         Board board = boardRepository.findById(boardId).orElseThrow(
                 () -> new CustomException(ErrorCode.NOT_FOUND_BOARD)
         );
 
-        Card card = cardRepository.findByIdAndBoardId(boardId, cardId).orElseThrow(
+        Card card = cardRepository.findByIdAndBoardId(cardId, boardId).orElseThrow(
                 () -> new CustomException(ErrorCode.NOT_FOUND_CARD)
         );
+
+        if(!Objects.equals(user.getNickname(), card.getUser().getNickname())){
+            throw new CustomException(ErrorCode.NOT_PERMISSION_DELETE);
+        }
 
         cardRepository.delete(card);
     }

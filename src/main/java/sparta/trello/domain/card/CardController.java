@@ -49,8 +49,9 @@ public class CardController {
 //    }
 
     @DeleteMapping("/boards/{boardId}/cards/{cardId}")
-    public ResponseEntity<CommonResponse> deleteCard(@PathVariable Long boardId, @PathVariable Long cardId){
-        cardService.deleteCard(boardId, cardId);
+    public ResponseEntity<CommonResponse> deleteCard(@AuthenticationPrincipal UserPrincipal principal, @PathVariable Long boardId, @PathVariable Long cardId){
+        User user = principal.getUser();
+        cardService.deleteCard(boardId, cardId, user);
         return ResponseEntity.status(HttpStatus.CREATED).body(new CommonResponse("삭제 성공", HttpStatus.CREATED.value(), ""));
     }
 
