@@ -4,15 +4,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import sparta.trello.domain.board.Board;
 import sparta.trello.domain.board.BoardRepository;
+import sparta.trello.domain.card.dto.CardRequestDto;
+import sparta.trello.domain.card.dto.CardResponseDto;
 import sparta.trello.domain.status.Status;
 import sparta.trello.domain.status.StatusRepository;
 import sparta.trello.domain.user.User;
 import sparta.trello.domain.user.UserRepository;
 import sparta.trello.global.exception.CustomException;
 import sparta.trello.global.exception.ErrorCode;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor

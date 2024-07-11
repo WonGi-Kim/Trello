@@ -1,4 +1,4 @@
-package sparta.trello.domain.card;
+package sparta.trello.domain.card.dto;
 
 import lombok.Data;
 import sparta.trello.domain.status.Status;
