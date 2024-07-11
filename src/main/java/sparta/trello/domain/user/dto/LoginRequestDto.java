@@ -1,4 +1,4 @@
-package sparta.trello.domain.user;
+package sparta.trello.domain.user.dto;
 
 import lombok.Data;
 

@@ -14,6 +14,7 @@ import sparta.trello.global.exception.CustomException;
 import sparta.trello.global.exception.ErrorCode;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @Service
@@ -24,19 +25,13 @@ public class CardService {
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
 
-    public CardResponseDto create(CardRequestDto requestDto, Long statusId, Long boardId) {
+    public CardResponseDto create(CardRequestDto requestDto, Long statusId, Long boardId, User user) {
 
         Status status = statusRepository.findById(statusId).orElseThrow(
                 () -> new CustomException(ErrorCode.NOT_FOUND_STATUS)
         );
 
-        Board board = boardRepository.findById(boardId).orElseThrow(
-                ()-> new CustomException(ErrorCode.NOT_FOUND_BOARD)
-        );
-
-        User user = userRepository.findById(1L).orElseThrow(
-                ()-> new CustomException(ErrorCode.USERNAME_NOT_FOUND)
-        );
+        Board board = checkBoard(boardId);
 
         int size = cardRepository.findMaxCardSizeByStatusId(statusId, boardId);
         int seq = size + 1;
@@ -94,4 +89,26 @@ public class CardService {
         return cardList.stream().map(card -> new CardResponseDto(card.getContent(), card.getTitle(), card.getDeadline(), card.getStatus(), card.getUser()))
                 .collect(Collectors.toList());
     }
+
+    public void deleteCard(Long boardId, Long cardId, User user) {
+        checkBoard(boardId);
+
+        Card card = cardRepository.findById(cardId).orElseThrow(
+                () -> new CustomException(ErrorCode.NOT_FOUND_CARD)
+        );
+
+        if(!Objects.equals(user.getNickname(), card.getUser().getNickname())){
+            throw new CustomException(ErrorCode.NOT_PERMISSION_DELETE);
+        }
+
+        cardRepository.delete(card);
+    }
+
+    public Board checkBoard(Long boardId){
+        Board board = boardRepository.findById(boardId).orElseThrow(
+                ()-> new CustomException(ErrorCode.NOT_FOUND_BOARD)
+        );
+        return board;
+    }
+
 }

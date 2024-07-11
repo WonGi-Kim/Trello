@@ -5,6 +5,6 @@ import sparta.trello.domain.user.User;
 
 import java.util.List;
 
-public interface InviteRepository extends JpaRepository<Board, Long> {
-    List<Board> findByUser(User user);
+public interface InviteRepository extends JpaRepository<Invite, Long> {
+    List<Invite> findByUser(User user);
 }
