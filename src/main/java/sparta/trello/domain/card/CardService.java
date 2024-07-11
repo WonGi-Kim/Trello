@@ -24,11 +24,11 @@ public class CardService {
     public CardResponseDto create(CardRequestDto requestDto, Long columnId, Long boardId) {
 
         Status status = statusRepository.findById(columnId).orElseThrow(
-                () -> new CustomException(ErrorCode.STATUS_NOT_FOUND)
+                () -> new CustomException(ErrorCode.NOT_FOUND_STATUS)
         );
 
         Board board = boardRepository.findById(boardId).orElseThrow(
-                ()-> new CustomException(ErrorCode.BOARD_NOT_FOUND)
+                ()-> new CustomException(ErrorCode.NOT_FOUND_BOARD)
         );
 
         User user = userRepository.findById(1L).orElseThrow(
