@@ -1,0 +1,60 @@
+### 회원가입 - 관리자
+POST http://localhost:8080/users/signup
+Content-Type: application/json
+
+{
+  "email": "admin@gmail.com",
+  "password" : "passWord123!",
+  "nickname": "adminname",
+  "managercode": "zhemtpwnfdpsmseoajflrkdlTek"
+}
+
+### 로그인 - 관리자
+POST http://localhost:8080/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@gmail.com",
+  "password": "passWord123!"
+}
+
+> {%
+    client.global.set("access_token", response.body.result.access);
+    client.global.set("refresh_token", response.body.result.refresh);
+%}
+
+### 보드 생성
+POST http://localhost:8080/boards
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "boardName": "Test Board name",
+  "introduction": "테스트 보드입니다."
+}
+
+### 컬럼 생성
+POST http://localhost:8080/boards/1/status
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "title": "Test Status name4"
+}
+
+### 컬럼 조회
+GET http://localhost:8080/boards/1/status
+Authorization: Bearer {{access_token}}
+
+### 컬럼 수정
+PUT http://localhost:8080/boards/1/status/orders
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+[
+    { "statusId": 52, "sequence": 1 },
+    { "statusId": 53, "sequence": 2 },
+    { "statusId": 2, "sequence": 3 },
+    { "statusId": 1, "sequence": 4 }
+]
+

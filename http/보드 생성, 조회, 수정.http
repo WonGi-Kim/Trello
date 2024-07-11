@@ -25,3 +25,13 @@ Authorization: Bearer {{access_token}}
 ### 보드 조회
 GET http://localhost:8080/boards
 Authorization: Bearer {{access_token}}
+
+### 보드 수정
+PUT http://localhost:8080/boards/1
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "boardName": "Test Board name_update",
+  "introduction": "수정한 테스트 보드입니다."
+}

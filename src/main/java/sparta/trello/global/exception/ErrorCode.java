@@ -20,6 +20,7 @@ public enum ErrorCode {
     NOT_FOUND_TOKEN(HttpStatus.NOT_FOUND, "토큰이 없습니다."),
     TOKEN_EXPIRED(HttpStatus.BAD_REQUEST, "토큰이 만료되었습니다."),
     TOKEN_INVALID(HttpStatus.BAD_REQUEST, "토큰이 유효하지 않습니다."),
+    NOT_FOUND_REFRESH_TOKEN(HttpStatus.NOT_FOUND, "리프레쉬 토큰이 없습니다."),
 
 
     // Status(Column)
@@ -40,7 +41,11 @@ public enum ErrorCode {
     //Card
     NOT_PERMISSION_DELETE(HttpStatus.UNAUTHORIZED, "삭제할 수 없습니다."),
     NOT_PERMISSION_UPDATE(HttpStatus.UNAUTHORIZED, "수정할 수 없습니다"),
-    NOT_PERMISSION_CHANGE(HttpStatus.UNAUTHORIZED, "변경할 수 없습니다.");
+    NOT_PERMISSION_CHANGE(HttpStatus.UNAUTHORIZED, "변경할 수 없습니다."),
+
+
+    // Board
+    FORBIDDEN_BOARD(HttpStatus.FORBIDDEN, "해당 보드 권한이 없습니다.");
 
     private final HttpStatus status;
     private final String message;

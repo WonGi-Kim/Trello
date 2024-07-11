@@ -42,6 +42,10 @@ public class Status extends Timestamped {
         this.board = board;
     }
 
+    public void setSequence(int sequence) {
+        this.sequence = sequence;
+    }
+
     public void updateStatusId(Long id){
         this.id = id;
     }

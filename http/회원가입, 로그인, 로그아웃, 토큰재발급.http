@@ -51,3 +51,21 @@ Content-Type: application/json
 PUT http://localhost:8080/auth/logout
 Content-Type: application/json
 Authorization: Bearer {{access_token}}
+
+### 로그아웃
+PUT http://localhost:8080/auth/logout
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+### 토큰 재발급
+POST http://localhost:8080/auth/reissue
+Content-Type: application/json
+
+{
+  "refresh": "26ac9a39-e6f1-4f17-815e-51ec91814acc"
+}
+
+> {%
+    client.global.set("access_token", response.body.result.access);
+    client.global.set("refresh_token", response.body.result.refresh);
+%}

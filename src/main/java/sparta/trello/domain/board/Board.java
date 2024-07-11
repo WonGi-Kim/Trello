@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import sparta.trello.domain.board.dto.BoardRequestDto;
 import sparta.trello.domain.user.User;
 import sparta.trello.global.Timestamped;
 
@@ -33,6 +34,13 @@ public class Board extends Timestamped {
         this.boardName = boardName;
         this.introduction = introduction;
         this.user = user;
+
+    }
+
+    public void update(BoardRequestDto boardRequestDto) {
+
+        this.boardName = boardRequestDto.getBoardName();
+        this.introduction = boardRequestDto.getIntroduction();
 
     }
 }

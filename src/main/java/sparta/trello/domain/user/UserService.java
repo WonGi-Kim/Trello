@@ -3,6 +3,8 @@ package sparta.trello.domain.user;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import sparta.trello.domain.user.dto.SignupRequestDto;
+import sparta.trello.domain.user.dto.SignupResponseDto;
 import sparta.trello.global.exception.CustomException;
 import sparta.trello.global.exception.ErrorCode;
 

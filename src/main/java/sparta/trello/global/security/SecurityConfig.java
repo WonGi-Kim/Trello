@@ -3,6 +3,7 @@ package sparta.trello.global.security;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -72,7 +73,15 @@ public class SecurityConfig {
 
         http.authorizeHttpRequests(request ->
                 request
-                        .requestMatchers("/**").permitAll()
+                        .requestMatchers("/auth/login").anonymous()
+                        .requestMatchers("/users/signup").anonymous()
+                        .requestMatchers("/auth/reissue").anonymous()
+                        .requestMatchers(HttpMethod.POST, "/boards").hasRole("MANAGER")
+                        .requestMatchers(HttpMethod.PUT, "^/boards/\\d+&").hasRole("MANAGER")
+                        .requestMatchers(HttpMethod.DELETE, "^/boards/\\d+$").hasRole("MANAGER")
+                        .requestMatchers(HttpMethod.POST, "^/boards/\\d+/status$").hasRole("MANAGER")
+                        .requestMatchers(HttpMethod.DELETE, "^/boards/\\d+$/status/\\d+$").hasRole("MANAGER")
+                        .requestMatchers("/v3/**", "/swagger-ui/**").permitAll()
                         .anyRequest().authenticated());
 
 
