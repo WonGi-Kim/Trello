@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 import sparta.trello.domain.status.dto.CreateStatusRequestDto;
+import sparta.trello.domain.status.dto.CreateStatusResponseDto;
 import sparta.trello.global.common.CommonResponse;
 
 @RestController
@@ -17,7 +18,8 @@ public class StatusController {
 
     @PostMapping("/boards/{boardId}/status")
     public ResponseEntity<CommonResponse> createStatus(@PathVariable("boardId") Long boardId, @RequestBody CreateStatusRequestDto requestDto) {
-        CommonResponse response = statusService.createStatus(boardId, requestDto);
+        CreateStatusResponseDto responseDto = statusService.createStatus(boardId, requestDto);
+        CommonResponse response = new CommonResponse<>("컬럼 생성 완료", 201, responseDto);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
