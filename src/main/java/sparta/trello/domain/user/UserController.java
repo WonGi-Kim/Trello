@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import sparta.trello.domain.user.dto.SignupRequestDto;
+import sparta.trello.domain.user.dto.SignupResponseDto;
 import sparta.trello.global.common.CommonResponse;
 
 @RestController

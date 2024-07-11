@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import sparta.trello.domain.user.dto.LoginRequestDto;
+import sparta.trello.domain.user.dto.LoginResponseDto;
 import sparta.trello.global.common.CommonResponse;
 import sparta.trello.global.security.JwtProvider;
 import sparta.trello.global.security.UserPrincipal;
