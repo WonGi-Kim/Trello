@@ -38,14 +38,10 @@ public class CardService {
 
         Board board = checkBoard(boardId);
 
-        int size = cardRepository.findMaxCardSizeByStatusId(statusId, boardId);
-        int seq = size + 1;
-
         Card card = Card.builder()
                 .status(status)
                 .board(board)
                 .user(user)
-                .sequence(seq)
                 .content(requestDto.getContent())
                 .title(requestDto.getTitle())
                 .deadline(requestDto.getDeadline())
