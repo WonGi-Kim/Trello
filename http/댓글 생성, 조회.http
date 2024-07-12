@@ -1,0 +1,26 @@
+### 로그인 - 유저
+POST http://localhost:8080/auth/login
+Content-Type: application/json
+
+{
+  "email": "test@gmail.com",
+  "password": "passWord123!"
+}
+
+> {%
+    client.global.set("access_token", response.body.result.access);
+    client.global.set("refresh_token", response.body.result.refresh);
+%}
+
+### 댓글 생성
+POST http://localhost:8080/cards/53/comments
+Content-Type: application/json
+Authorization: Bearer {{access_token}}
+
+{
+  "content": "댓글"
+}
+
+### 댓글 조회
+GET http://localhost:8080/cards/52/comments
+Authorization: Bearer {{access_token}}
