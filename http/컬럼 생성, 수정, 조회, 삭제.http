@@ -39,7 +39,7 @@ Content-Type: application/json
 Authorization: Bearer {{access_token}}
 
 {
-  "title": "Test Status name4"
+  "title": "Test Status name1"
 }
 
 ### 컬럼 조회
@@ -58,3 +58,6 @@ Authorization: Bearer {{access_token}}
     { "statusId": 1, "sequence": 4 }
 ]
 
+### 컬럼 삭제
+DELETE http://localhost:8080/boards/3/status/52
+Authorization: Bearer {{access_token}}
