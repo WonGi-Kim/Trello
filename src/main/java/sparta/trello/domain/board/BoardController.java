@@ -65,7 +65,7 @@ public class BoardController {
         boardService.deleteBoard(boardId, userPrincipal.getUser());
         CommonResponse<Void> commonResponseDto = new CommonResponse<>(
                 "보드 삭제 성공",
-                HttpStatus.NO_CONTENT.value(),
+                HttpStatus.OK.value(),
                 null
         );
         return ResponseEntity.ok().body(commonResponseDto);
