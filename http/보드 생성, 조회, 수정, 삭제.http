@@ -35,3 +35,7 @@ Authorization: Bearer {{access_token}}
   "boardName": "Test Board name_update",
   "introduction": "수정한 테스트 보드입니다."
 }
+
+### 보드 삭제
+DELETE http://localhost:8080/boards/1
+Authorization: Bearer {{access_token}}

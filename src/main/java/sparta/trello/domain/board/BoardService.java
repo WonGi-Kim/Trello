@@ -59,6 +59,12 @@ public class BoardService {
         return new BoardResponseDto(board);
     }
 
+    public void deleteBoard(Long boardId, User user) {
+        Board board = boardRepository.findById(boardId).orElseThrow(()->
+                new CustomException(ErrorCode.NOT_FOUND_BOARD));
+        boardRepository.delete(board);
+    }
+
     private List<Board> getBoardsByInvite(User user) {
         List<Invite> invites = inviteRepository.findByUser(user);
         return invites.stream()

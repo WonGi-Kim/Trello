@@ -57,4 +57,17 @@ public class BoardController {
         );
         return ResponseEntity.ok().body(commonResponseDto);
     }
+
+    @Operation(summary = "deleteBoard", description = "보드 삭제 기능입니다.")
+    @DeleteMapping("/boards/{boardId}")
+    public ResponseEntity<CommonResponse<Void>> deleteBoard(@PathVariable Long boardId,
+                                                            @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        boardService.deleteBoard(boardId, userPrincipal.getUser());
+        CommonResponse<Void> commonResponseDto = new CommonResponse<>(
+                "보드 삭제 성공",
+                HttpStatus.NO_CONTENT.value(),
+                null
+        );
+        return ResponseEntity.ok().body(commonResponseDto);
+    }
 }
