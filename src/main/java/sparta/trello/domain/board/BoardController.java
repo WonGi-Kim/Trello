@@ -10,6 +10,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import sparta.trello.domain.board.dto.BoardRequestDto;
 import sparta.trello.domain.board.dto.BoardResponseDto;
+import sparta.trello.domain.board.dto.InviteRequestDto;
+import sparta.trello.domain.board.dto.InviteResponseDto;
 import sparta.trello.global.common.CommonResponse;
 import sparta.trello.global.security.UserPrincipal;
 
@@ -69,5 +71,18 @@ public class BoardController {
                 null
         );
         return ResponseEntity.ok().body(commonResponseDto);
+    }
+
+    @Operation(summary = "inviteUser", description = "보드에 유저를 초대하는 기능입니다.")
+    @PostMapping("/boards/{boardId}/invite")
+    public ResponseEntity<CommonResponse<InviteResponseDto>> inviteUser(@Valid @RequestBody InviteRequestDto inviteRequestDto,
+                                                                        @PathVariable Long boardId,
+                                                                        @AuthenticationPrincipal UserPrincipal userPrincipal) {
+        CommonResponse<InviteResponseDto> commonResponseDto = new CommonResponse<>(
+                "보드 유저 초대 성공",
+                HttpStatus.CREATED.value(),
+                boardService.inviteUser(inviteRequestDto, boardId, userPrincipal.getUser())
+        );
+        return ResponseEntity.status(HttpStatus.CREATED).body(commonResponseDto);
     }
 }

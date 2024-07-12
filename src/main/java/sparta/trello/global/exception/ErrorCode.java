@@ -45,7 +45,8 @@ public enum ErrorCode {
 
 
     // Board
-    FORBIDDEN_BOARD(HttpStatus.FORBIDDEN, "해당 보드 권한이 없습니다.");
+    FORBIDDEN_BOARD(HttpStatus.FORBIDDEN, "해당 보드 권한이 없습니다."),
+    BAD_INVITE(HttpStatus.BAD_REQUEST, "이미 해당 보드에 초대한 유저입니다.");
 
     private final HttpStatus status;
     private final String message;
