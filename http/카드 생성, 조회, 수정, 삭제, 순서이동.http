@@ -43,5 +43,5 @@ DELETE http://localhost:8080/boards/1/cards/1
 Authorization: Bearer {{access_token}}
 
 ### 카드 순서 변경
-PUT http://localhost:8080/cards/1/orders/1
+PUT http://localhost:8080/cards/1/orders/2
 Authorization: Bearer {{access_token}}

@@ -77,8 +77,7 @@ public class SecurityConfig {
                         .requestMatchers("/users/signup").anonymous()
                         .requestMatchers("/auth/reissue").anonymous()
                         //card 관련 2개는 인증받고 하는 것으로 수정.
-                        .requestMatchers(HttpMethod.POST, "/boards/*/status/*/cards").authenticated()
-                        .requestMatchers(HttpMethod.POST, "/boards/*/cards/**").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/boards/*/status/*/cards").authenticated().requestMatchers("/boards/*/cards/**").authenticated()
                         .requestMatchers(HttpMethod.POST, "/boards/**").hasRole("MANAGER")
                         .requestMatchers(HttpMethod.PUT, "/boards/**").hasRole("MANAGER")
                         .requestMatchers(HttpMethod.DELETE, "/boards/**").hasRole("MANAGER")
