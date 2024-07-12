@@ -7,9 +7,6 @@ import java.util.List;
 import java.util.Optional;
 
 public interface CardRepository extends JpaRepository <Card, Long> {
-    @Query("SELECT COALESCE(MAX(c.sequence), 0) FROM Card c WHERE c.board.id = :boardId AND c.status.id = :statusId")
-    int findMaxCardSizeByStatusId(Long statusId, Long boardId);
-
     @Query("SELECT c FROM Card c WHERE c.board.id = :boardId AND c.status.id = :statusId")
     List<Card> findCardListByStatus(Long boardId, Long statusId);
 
@@ -19,5 +16,4 @@ public interface CardRepository extends JpaRepository <Card, Long> {
     @Query("SELECT c FROM Card c where c.board.id = :boardId")
     List<Card> findCardList(Long boardId);
 
-    Optional<Card> findByIdAndBoardId(Long cardId, Long boardId);
 }

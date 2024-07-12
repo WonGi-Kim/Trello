@@ -7,7 +7,10 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import sparta.trello.domain.user.dto.LoginRequestDto;
-import sparta.trello.domain.user.dto.LoginResponseDto;
+import sparta.trello.domain.user.dto.ReissueTokenRequestDto;
+import sparta.trello.domain.user.dto.TokenDto;
+import sparta.trello.global.exception.CustomException;
+import sparta.trello.global.exception.ErrorCode;
 import sparta.trello.global.security.JwtProvider;
 import sparta.trello.global.security.UserPrincipal;
 
@@ -25,7 +28,7 @@ public class AuthService {
     @Value("${jwt.refresh-expire-time}")
     private Long EXPIRE_TIME;
 
-    public LoginResponseDto login(LoginRequestDto requestDto) {
+    public TokenDto login(LoginRequestDto requestDto) {
 
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
@@ -37,17 +40,44 @@ public class AuthService {
 
         User user = ((UserPrincipal)authentication.getPrincipal()).getUser();
 
-        Token token = reissueRefreshToken(user);
-        tokenRepository.save(token);
+        Token refreshToken = issueRefreshToken(user);
+        Token savedRefreshToken = tokenRepository.save(refreshToken);
 
-        String accessToken = jwtProvider.generateToken(authentication);
-        String refreshToken = token.getToken();
+        String accessToken = jwtProvider.generateToken(user.getEmail());
 
-        return new LoginResponseDto(accessToken, refreshToken);
+        return new TokenDto(accessToken, savedRefreshToken.getToken());
 
     }
 
-    private Token reissueRefreshToken(User user) {
+    public void logout(User user) {
+
+        tokenRepository.findByUserId(user.getId()).ifPresent(tokenRepository::delete);
+
+    }
+
+    public TokenDto reissueToken(ReissueTokenRequestDto requestDto) {
+
+        Token refreshToken = tokenRepository.findByToken(requestDto.getRefresh()).orElseThrow(
+                () -> new CustomException(ErrorCode.NOT_FOUND_REFRESH_TOKEN)
+        );
+
+        if(expired(refreshToken)) {
+            throw new CustomException(ErrorCode.TOKEN_EXPIRED);
+        }
+
+        User user = refreshToken.getUser();
+
+        Date expireDate = new Date(new Date().getTime() + EXPIRE_TIME);
+        refreshToken.updateExpires(expireDate);
+        Token savedRefreshToken = tokenRepository.save(refreshToken);
+
+        String accessToken = jwtProvider.generateToken(user.getEmail());
+
+        return new TokenDto(accessToken, savedRefreshToken.getToken());
+
+    }
+
+    private Token issueRefreshToken(User user) {
 
         Date expireDate = new Date(new Date().getTime() + EXPIRE_TIME);
         Optional<Token> optionalToken = tokenRepository.findByUserId(user.getId());
@@ -68,9 +98,10 @@ public class AuthService {
 
     }
 
-    public void logout(User user) {
+    private boolean expired(Token token) {
 
-        tokenRepository.findByUserId(user.getId()).ifPresent(tokenRepository::delete);
+        return token.getExpires().getTime() < new Date().getTime();
 
     }
+
 }

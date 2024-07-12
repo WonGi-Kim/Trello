@@ -27,8 +27,6 @@ public class Card extends Timestamped {
     @Column(nullable = false)
     private String title;
 
-    @Column(nullable = false)
-    private int sequence;
 
     @Column
     private String content;
@@ -52,15 +50,32 @@ public class Card extends Timestamped {
     private Board board;
 
     @Builder
-    public Card(String title, int sequence, String content, LocalDate deadline, Status status, User user, Board board) {
-
+    public Card(String title, String content, LocalDate deadline, Status status, User user, Board board) {
         this.title = title;
-        this.sequence = sequence;
         this.content = content;
         this.deadline = deadline;
         this.status = status;
         this.user = user;
         this.board = board;
+    }
 
+    public void updateDeadline(LocalDate deadline){
+        this.deadline = deadline;
+    }
+
+    public void updateTitle(String title){
+        this.title = title;
+    }
+
+    public void updateContent(String content){
+        this.content = content;
+    }
+
+    public void updateStatus(Long newStatusId){
+        this.status.updateStatusId(newStatusId);
+    }
+
+    public void updateUser(User newUser) {
+        this.user = newUser;
     }
 }

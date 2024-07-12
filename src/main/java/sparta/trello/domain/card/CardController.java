@@ -5,11 +5,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.parameters.P;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-import sparta.trello.domain.card.dto.CardRequestDto;
-import sparta.trello.domain.card.dto.CardResponseDto;
-import sparta.trello.domain.card.dto.NicknameRequestDto;
+import sparta.trello.domain.card.dto.*;
 import sparta.trello.domain.user.User;
 import sparta.trello.global.common.CommonResponse;
 import sparta.trello.global.security.UserPrincipal;
@@ -52,7 +51,28 @@ public class CardController {
     public ResponseEntity<CommonResponse> deleteCard(@AuthenticationPrincipal UserPrincipal principal, @PathVariable Long boardId, @PathVariable Long cardId){
         User user = principal.getUser();
         cardService.deleteCard(boardId, cardId, user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(new CommonResponse("삭제 성공", HttpStatus.CREATED.value(), ""));
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse<>("삭제 성공", HttpStatus.OK.value(), ""));
+    }
+
+    @PatchMapping("/boards/{boardId}/cards/{cardId}")
+    public ResponseEntity<CommonResponse<CardUpdateResponseDto>> updateCard
+            (@AuthenticationPrincipal UserPrincipal principal, @PathVariable Long boardId, @PathVariable Long cardId, @RequestBody CardUpdateRequestDto requestDto){
+        User user = principal.getUser();
+        CardUpdateResponseDto responseDto = cardService.updateCard(boardId, cardId, requestDto, user);
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse<>("수정 성공", HttpStatus.OK.value(), responseDto));
+    }
+
+    /**
+     * 가정
+     * 카드 이동 : 프론트에서 카드 칼럼이 변경된 상태 ID, 현재 카드 ID를 받아온 값 -> PathVariable로 넣어줘서 사용하게 만듬.
+     */
+
+    @PutMapping("/cards/{cardId}/orders/{newStatusId}")
+    public ResponseEntity<CommonResponse> changeStatus
+            (@AuthenticationPrincipal UserPrincipal principal, @PathVariable Long cardId, @PathVariable Long newStatusId){
+        User user = principal.getUser();
+        cardService.changeStatus(cardId, newStatusId, user);
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse<>("변경 성공", HttpStatus.OK.value(), ""));
     }
 
 
