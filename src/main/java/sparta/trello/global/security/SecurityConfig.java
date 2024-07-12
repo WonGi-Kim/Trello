@@ -15,6 +15,7 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.web.cors.CorsConfigurationSource;
 import sparta.trello.global.security.handler.AccessDeniedHandlerImpl;
 import sparta.trello.global.security.handler.AuthenticationEntryPointImpl;
 
@@ -24,6 +25,7 @@ public class SecurityConfig {
 
     private final JwtProvider jwtProvider;
     private final UserDetailsServiceImpl userDetailsService;
+    private final CorsConfigurationSource corsConfigurationSource;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -84,6 +86,8 @@ public class SecurityConfig {
                         .requestMatchers("/v3/**", "/swagger-ui/**").permitAll()
                         .anyRequest().authenticated());
 
+
+        http.cors(cors -> cors.configurationSource(corsConfigurationSource));
 
         http.addFilterAt(jwtAuthenticationFilter(), BasicAuthenticationFilter.class);
 
