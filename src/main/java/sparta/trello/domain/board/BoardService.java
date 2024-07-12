@@ -12,7 +12,6 @@ import sparta.trello.global.exception.ErrorCode;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -36,8 +35,14 @@ public class BoardService {
 
     public List<BoardResponseDto> getBoards(User user) {
         List<Board> boardList = new ArrayList<>();
-        boardList.addAll(boardRepository.findByUser(user));
-        boardList.addAll(Objects.requireNonNull(getBoardsByInvite(user)));
+
+        if(user.getRole().equals(User.Role.MANAGER)){
+            boardList = boardRepository.findAll();
+
+        }else {
+            boardList.addAll(boardRepository.findByUser(user));
+            boardList.addAll(Objects.requireNonNull(getBoardsByInvite(user)));
+        }
 
         return boardList.stream()
                 .map(BoardResponseDto::new)
@@ -49,15 +54,9 @@ public class BoardService {
         Board board = boardRepository.findById(boardId).orElseThrow(()->
                 new CustomException(ErrorCode.NOT_FOUND_BOARD));
 
-        Optional<Invite> optionalInvite = inviteRepository.findByBoardAndUser(board, user);
+        board.update(boardRequestDto);
 
-        if (board.getUser().getId().equals(user.getId()) || optionalInvite.isPresent()){
-            board.update(boardRequestDto);
-
-            return new BoardResponseDto(board);
-        }else{
-            throw new CustomException(ErrorCode.FORBIDDEN_BOARD);
-        }
+        return new BoardResponseDto(board);
     }
 
     private List<Board> getBoardsByInvite(User user) {
@@ -66,4 +65,5 @@ public class BoardService {
                 .map(Invite::getBoard)
                 .collect(Collectors.toList());
     }
+
 }

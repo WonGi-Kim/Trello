@@ -76,11 +76,12 @@ public class SecurityConfig {
                         .requestMatchers("/auth/login").anonymous()
                         .requestMatchers("/users/signup").anonymous()
                         .requestMatchers("/auth/reissue").anonymous()
-                        .requestMatchers(HttpMethod.POST, "/boards").hasRole("MANAGER")
-                        .requestMatchers(HttpMethod.PUT, "^/boards/\\d+&").hasRole("MANAGER")
-                        .requestMatchers(HttpMethod.DELETE, "^/boards/\\d+$").hasRole("MANAGER")
-                        .requestMatchers(HttpMethod.POST, "^/boards/\\d+/status$").hasRole("MANAGER")
-                        .requestMatchers(HttpMethod.DELETE, "^/boards/\\d+$/status/\\d+$").hasRole("MANAGER")
+                        //card 관련 2개는 인증받고 하는 것으로 수정.
+                        .requestMatchers(HttpMethod.POST, "/boards/*/status/*/cards").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/boards/*/cards/**").authenticated()
+                        .requestMatchers(HttpMethod.POST, "/boards/**").hasRole("MANAGER")
+                        .requestMatchers(HttpMethod.PUT, "/boards/**").hasRole("MANAGER")
+                        .requestMatchers(HttpMethod.DELETE, "/boards/**").hasRole("MANAGER")
                         .requestMatchers("/v3/**", "/swagger-ui/**").permitAll()
                         .anyRequest().authenticated());
 
