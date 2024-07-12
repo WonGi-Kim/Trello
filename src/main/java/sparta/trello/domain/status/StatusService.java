@@ -13,6 +13,7 @@ import sparta.trello.global.exception.CustomException;
 import sparta.trello.global.exception.ErrorCode;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -65,18 +66,17 @@ public class StatusService {
 
         checkManager(user.getRole().getValue());
 
+        //  기존 코드의 O(MN) 해소를 위해 StatusList를 HashMap으로 변경
+        Map<Long, Status> statusMap = statusList.stream()
+                .collect(Collectors.toMap(Status::getId, status -> status));
+
         // 프론트에서 보낸 순서로 Status 엔티티의 sequence 값을 업데이트
-        // ToDo: MN 복잡도 해결하
         for (StatusUpdateRequestDto requestDto : currentStatusSequence) {
-            for (Status status : statusList) {
-                if (status.getId().equals(requestDto.getStatusId())) {
-                    status.setSequence(requestDto.getSequence());
-                    break;
-                }
+            Status status = statusMap.get(requestDto.getStatusId());
+            if(status != null) {
+                status.setSequence(requestDto.getSequence());
             }
         }
-
-
         statusRepository.saveAll(statusList);
     }
 
