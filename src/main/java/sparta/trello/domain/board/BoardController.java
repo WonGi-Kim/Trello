@@ -50,21 +50,19 @@ public class BoardController {
     @Operation(summary = "updateBoard", description = "보드 업데이트 기능입니다.")
     @PutMapping("/boards/{boardId}")
     public ResponseEntity<CommonResponse<BoardResponseDto>> updateBoard(@Valid @RequestBody BoardRequestDto boardRequestDto,
-                                                                        @PathVariable Long boardId,
-                                                                        @AuthenticationPrincipal UserPrincipal userPrincipal) {
+                                                                        @PathVariable Long boardId) {
         CommonResponse<BoardResponseDto> commonResponseDto = new CommonResponse<>(
                 "보드 업데이트 성공",
                 HttpStatus.OK.value(),
-                boardService.updateBoard(boardRequestDto, boardId, userPrincipal.getUser())
+                boardService.updateBoard(boardRequestDto, boardId)
         );
         return ResponseEntity.ok().body(commonResponseDto);
     }
 
     @Operation(summary = "deleteBoard", description = "보드 삭제 기능입니다.")
     @DeleteMapping("/boards/{boardId}")
-    public ResponseEntity<CommonResponse<Void>> deleteBoard(@PathVariable Long boardId,
-                                                            @AuthenticationPrincipal UserPrincipal userPrincipal) {
-        boardService.deleteBoard(boardId, userPrincipal.getUser());
+    public ResponseEntity<CommonResponse<Void>> deleteBoard(@PathVariable Long boardId) {
+        boardService.deleteBoard(boardId);
         CommonResponse<Void> commonResponseDto = new CommonResponse<>(
                 "보드 삭제 성공",
                 HttpStatus.OK.value(),
@@ -76,12 +74,11 @@ public class BoardController {
     @Operation(summary = "inviteUser", description = "보드에 유저를 초대하는 기능입니다.")
     @PostMapping("/boards/{boardId}/invite")
     public ResponseEntity<CommonResponse<InviteResponseDto>> inviteUser(@Valid @RequestBody InviteRequestDto inviteRequestDto,
-                                                                        @PathVariable Long boardId,
-                                                                        @AuthenticationPrincipal UserPrincipal userPrincipal) {
+                                                                        @PathVariable Long boardId) {
         CommonResponse<InviteResponseDto> commonResponseDto = new CommonResponse<>(
                 "보드 유저 초대 성공",
                 HttpStatus.CREATED.value(),
-                boardService.inviteUser(inviteRequestDto, boardId, userPrincipal.getUser())
+                boardService.inviteUser(inviteRequestDto, boardId)
         );
         return ResponseEntity.status(HttpStatus.CREATED).body(commonResponseDto);
     }

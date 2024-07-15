@@ -7,10 +7,10 @@ spring:
   application:
     name: trello
   datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3307/trello
     username: ${MYSQL_USER}
     password: ${MYSQL_PASSWORD}
-    driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     hibernate:
