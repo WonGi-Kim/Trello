@@ -2,6 +2,7 @@ package sparta.trello.domain.card;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.autoconfigure.reactor.ReactorProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -19,6 +20,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CardController {
     private final CardService cardService;
+    private final ReactorProperties reactorProperties;
 
     @PostMapping("/boards/{boardId}/status/{statusId}/cards")
     public ResponseEntity<CommonResponse<CardResponseDto>> createCard
@@ -33,6 +35,13 @@ public class CardController {
             (@AuthenticationPrincipal UserPrincipal principal, @PathVariable Long boardId, CardSearchCond searchCond) {
         List<CardResponseDto> responseDtos = cardService.findCardList(principal, boardId, searchCond);
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse<>("전체 목록 조회 성공", HttpStatus.OK.value(), responseDtos));
+    }
+
+    @GetMapping("/boards/{boardId}/cards/{cardId}")
+    public ResponseEntity<CommonResponse<CardResponseDto>> findCard(@AuthenticationPrincipal UserPrincipal principal, @PathVariable Long cardId, @PathVariable Long boardId){
+        User user = principal.getUser();
+        CardResponseDto responseDto = cardService.findCard(cardId, boardId, user);
+        return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse<>("단건 목록 조회 성공", HttpStatus.OK.value(), responseDto));
     }
 
     @DeleteMapping("/boards/{boardId}/cards/{cardId}")
