@@ -26,6 +26,12 @@ Authorization: Bearer {{access_token}}
 GET http://localhost:8080/boards/1/cards
 Authorization: Bearer {{access_token}}
 
+
+### 카드 단건 목록 조회
+GET http://localhost:8080/boards/1/cards/102
+Authorization: Bearer {{access_token}}
+
+
 ### 카드 수정
 PATCH http://localhost:8080/boards/1/cards/1
 Content-Type: application/json

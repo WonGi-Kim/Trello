@@ -71,6 +71,16 @@ public class CardService {
     }
 
 
+    public CardResponseDto findCard(Long cardId, Long boardId, User user) {
+        Board board = checkBoard(boardId);
+
+        checkInvite(user, board);
+
+        Card card = checkCard(cardId);
+
+        return new CardResponseDto(card.getContent(), card.getTitle(), card.getDeadline(), card.getStatus(), card.getUser());
+    }
+
     public void deleteCard(Long boardId, Long cardId, User user) {
         Board board = checkBoard(boardId);
 
