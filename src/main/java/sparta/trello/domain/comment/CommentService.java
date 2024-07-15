@@ -6,6 +6,7 @@ import sparta.trello.domain.card.Card;
 import sparta.trello.domain.card.CardRepository;
 import sparta.trello.domain.comment.dto.CommentRequestDto;
 import sparta.trello.domain.comment.dto.CommentResponseDto;
+import sparta.trello.domain.user.User;
 import sparta.trello.global.exception.CustomException;
 import sparta.trello.global.exception.ErrorCode;
 
@@ -18,7 +19,7 @@ public class CommentService {
     private final CardRepository cardRepository;
     private final CommentRepository commentRepository;
 
-    public Comment addComment(Long cardId, CommentRequestDto requestDto) {
+    public Comment addComment(Long cardId, CommentRequestDto requestDto, User user) {
         // 카드 조회
         Card card = cardRepository.findById(cardId)
                 .orElseThrow(() -> new CustomException(ErrorCode.NOT_FOUND_CARD));
@@ -31,6 +32,7 @@ public class CommentService {
         Comment comment = Comment.builder()
                 .card(card)
                 .content(requestDto.getContent())
+                .user(user)
                 .build();
 
         return commentRepository.save(comment);
