@@ -38,9 +38,9 @@ public class CardController {
     }
 
     @GetMapping("/boards/{boardId}/cards/{cardId}")
-    public ResponseEntity<CommonResponse<CardResponseDto>> findCard(@AuthenticationPrincipal UserPrincipal principal, @PathVariable Long cardId, @PathVariable Long boardId){
+    public ResponseEntity<CommonResponse<FindCardResponseDto>> findCard(@AuthenticationPrincipal UserPrincipal principal, @PathVariable Long cardId, @PathVariable Long boardId){
         User user = principal.getUser();
-        CardResponseDto responseDto = cardService.findCard(cardId, boardId, user);
+        FindCardResponseDto responseDto = cardService.findCard(cardId, boardId, user);
         return ResponseEntity.status(HttpStatus.OK).body(new CommonResponse<>("단건 목록 조회 성공", HttpStatus.OK.value(), responseDto));
     }
 
