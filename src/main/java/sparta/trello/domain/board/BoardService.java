@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -55,7 +54,7 @@ public class BoardService {
     }
 
     @Transactional
-    public BoardResponseDto updateBoard(BoardRequestDto boardRequestDto, Long boardId, User user) {
+    public BoardResponseDto updateBoard(BoardRequestDto boardRequestDto, Long boardId) {
         Board board = boardRepository.findById(boardId).orElseThrow(()->
                 new CustomException(ErrorCode.NOT_FOUND_BOARD));
 
@@ -64,12 +63,13 @@ public class BoardService {
         return new BoardResponseDto(board);
     }
 
-    public void deleteBoard(Long boardId, User user) {
+    public void deleteBoard(Long boardId) {
         Board board = boardRepository.findById(boardId).orElseThrow(()->
                 new CustomException(ErrorCode.NOT_FOUND_BOARD));
         boardRepository.delete(board);
     }
-    public InviteResponseDto inviteUser(InviteRequestDto inviteRequestDto, Long boardId, User user) {
+
+    public InviteResponseDto inviteUser(InviteRequestDto inviteRequestDto, Long boardId) {
         User invitedUser = userRepository.findByEmail(inviteRequestDto.getEmail()).orElseThrow(() ->
                 new CustomException(ErrorCode.USERNAME_NOT_FOUND));
 
@@ -83,6 +83,8 @@ public class BoardService {
 
         if (!isAlreadyInvite(board, invitedUser)) {
             inviteRepository.save(invite);
+        } else {
+            throw new CustomException(ErrorCode.BAD_INVITE);
         }
 
         return new InviteResponseDto(invite);
@@ -92,14 +94,11 @@ public class BoardService {
         List<Invite> invites = inviteRepository.findByUser(user);
         return invites.stream()
                 .map(Invite::getBoard)
-                .collect(Collectors.toList());
+                .toList();
     }
 
-    private boolean isAlreadyInvite(Board board, User user){
+    private boolean isAlreadyInvite(Board board, User user) {
         Optional<Invite> optionalInvite = inviteRepository.findByBoardAndUser(board, user);
-        if(optionalInvite.isPresent()){
-            throw new CustomException(ErrorCode.BAD_INVITE);
-        }
-        return false;
+        return optionalInvite.isPresent();
     }
 }
