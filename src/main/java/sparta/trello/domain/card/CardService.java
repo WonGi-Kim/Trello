@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import sparta.trello.domain.board.Board;
 import sparta.trello.domain.board.BoardRepository;
+import sparta.trello.domain.board.Invite;
+import sparta.trello.domain.board.InviteRepository;
 import sparta.trello.domain.card.dto.*;
 import sparta.trello.domain.status.Status;
 import sparta.trello.domain.status.StatusRepository;
@@ -26,6 +28,7 @@ public class CardService {
     private final StatusRepository statusRepository;
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
+    private final InviteRepository inviteRepository;
 
     private final UserService userService;
     private final StatusService statusService;
@@ -35,6 +38,8 @@ public class CardService {
         Status status = checkStatus(statusId);
 
         Board board = checkBoard(boardId);
+
+        checkInvite(user, board);
 
         Card card = Card.builder()
                 .status(status)
@@ -54,14 +59,22 @@ public class CardService {
         if(!boardRepository.existsById(boardId)){
             throw new CustomException(ErrorCode.NOT_FOUND_BOARD);
         }
+
+        User user = principal.getUser();
+        Board board = checkBoard(boardId);
+        checkInvite(user, board);
+
         List<Card> cardList = cardRepository.findBySearchCond(boardId, searchCond);
+
         return cardList.stream().map(card -> new CardResponseDto(card.getContent(), card.getTitle(), card.getDeadline(), card.getStatus(), card.getUser()))
                 .collect(Collectors.toList());
     }
 
 
     public void deleteCard(Long boardId, Long cardId, User user) {
-        checkBoard(boardId);
+        Board board = checkBoard(boardId);
+
+        checkInvite(user, board);
 
         Card card = checkCard(cardId);
 
@@ -73,7 +86,8 @@ public class CardService {
     }
 
     public CardUpdateResponseDto updateCard(Long boardId, Long cardId, CardUpdateRequestDto requestDto, User user) {
-        checkBoard(boardId);
+        Board board = checkBoard(boardId);
+        checkInvite(user, board);
 
         Card card = checkCard(cardId);
 
@@ -107,6 +121,12 @@ public class CardService {
            cardRepository.save(card);
         }
 
+    }
+
+    private void checkInvite(User user, Board board) {
+       Invite invite = inviteRepository.findByBoardAndUser(board, user).orElseThrow(
+               ()-> new CustomException(ErrorCode.NOT_INVITE)
+       );
     }
 
     public Board checkBoard(Long boardId){
