@@ -6,9 +6,11 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import sparta.trello.domain.comment.dto.CommentRequestDto;
 import sparta.trello.domain.comment.dto.CommentResponseDto;
+import sparta.trello.global.security.UserPrincipal;
 
 import java.util.List;
 
@@ -23,10 +25,11 @@ public class CommentController {
     @PostMapping("/cards/{cardId}/comments")
     public ResponseEntity<CommentResponseDto> addCommentToCard(
             @PathVariable Long cardId,
-            @Valid @RequestBody CommentRequestDto requestDto) {
+            @Valid @RequestBody CommentRequestDto requestDto,
+            @AuthenticationPrincipal UserPrincipal userPrincipal) {
 
         CommentResponseDto responseDto = new CommentResponseDto(
-                commentService.addComment(cardId, requestDto));
+                commentService.addComment(cardId, requestDto, userPrincipal.getUser()));
 
         return new ResponseEntity<>(responseDto, HttpStatus.CREATED); // 생성된 댓글 포함한 응답 반환
     }
