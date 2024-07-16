@@ -127,7 +127,9 @@ public class CardService {
         Long pastStatusId = card.getStatus().getId();
 
         if(!Objects.equals(pastStatusId, newStatusId)){
-           card.updateStatus(newStatusId);
+            Status newStatus = checkStatus(newStatusId);
+
+           card.updateStatus(newStatus);
            cardRepository.save(card);
         }
 
