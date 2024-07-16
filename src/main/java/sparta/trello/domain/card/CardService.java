@@ -55,7 +55,7 @@ public class CardService {
         return new CardResponseDto(requestDto.getContent(), requestDto.getTitle(), requestDto.getDeadline(), status, user);
     }
 
-    public List<CardResponseDto> findCardList(UserPrincipal principal, Long boardId, CardSearchCond searchCond) {
+    public List<FindCardListResponseDto> findCardList(UserPrincipal principal, Long boardId, CardSearchCond searchCond) {
         if(!boardRepository.existsById(boardId)){
             throw new CustomException(ErrorCode.NOT_FOUND_BOARD);
         }
@@ -66,7 +66,7 @@ public class CardService {
 
         List<Card> cardList = cardRepository.findBySearchCond(boardId, searchCond);
 
-        return cardList.stream().map(card -> new CardResponseDto(card.getContent(), card.getTitle(), card.getDeadline(), card.getStatus(), card.getUser()))
+        return cardList.stream().map(card -> new FindCardListResponseDto(card.getId(), card.getTitle(), card.getBoard(), card.getStatus(), card.getContent(), card.getUser(), card.getDeadline()))
                 .collect(Collectors.toList());
     }
 
