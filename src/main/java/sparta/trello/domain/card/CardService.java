@@ -134,6 +134,12 @@ public class CardService {
     }
 
     private void checkInvite(User user, Board board) {
+        if(user.getRole() == User.Role.MANAGER)
+            return;
+
+        if(board.getUser() == user)
+            return;
+
        Invite invite = inviteRepository.findByBoardAndUser(board, user).orElseThrow(
                ()-> new CustomException(ErrorCode.NOT_INVITE)
        );
