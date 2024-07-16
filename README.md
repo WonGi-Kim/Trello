@@ -74,7 +74,7 @@
 </details>
 </div>
 
-<div id="tech-stack">
+<div id="teck-stack">
   
 # 🎨 Teck Stack
 
@@ -85,7 +85,7 @@
 | Langage    | ![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white)                  | JDK17              |
 | Database   | ![MySQL](https://img.shields.io/badge/mysql-4479A1.svg?style=for-the-badge&logo=mysql&logoColor=white) <br/> ![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white) |  8.0.28 <br/>  3.8    |
 | Tools      | ![GitHub](https://img.shields.io/badge/github-%23121011.svg?style=for-the-badge&logo=github&logoColor=white)  ![Git](https://img.shields.io/badge/git-%23F05033.svg?style=for-the-badge&logo=git&logoColor=white)       |     |
-| Document |[![Notion](https://img.shields.io/badge/Notion-%23000000.svg?style=for-the-badge&logo=notion&logoColor=white)](https://www.notion.so/teamsparta/c9451bbd45cb4097a00f5e7b154fe6da?pvs=4)
+| Document |[![Notion](https://img.shields.io/badge/Notion-%23000000.svg?style=for-the-badge&logo=notion&logoColor=white)](https://www.notion.so/teamsparta/c9451bbd45cb4097a00f5e7b154fe6da?pvs=4) <br /> ![Figma](https://img.shields.io/badge/figma-%23F24E1E.svg?style=for-the-badge&logo=figma&logoColor=white) <br/>![Swagger](https://img.shields.io/badge/-Swagger-%23Clojure?style=for-the-badge&logo=swagger&logoColor=white)||
  | Code Editor | ![Visual Studio Code](https://img.shields.io/badge/Visual%20Studio%20Code-0078d7.svg?style=for-the-badge&logo=visual-studio-code&logoColor=white)  | |
  | FrontEnd | ![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB) | |
 
@@ -151,7 +151,7 @@
 </details>
 </div>
 
-<div id = "teck-doc">
+<div id = "tech-doc">
   
 # 📑 Technical Documentation
 
@@ -168,8 +168,8 @@
 <details>
 <summary>🧬 ERD DIAGRAM</summary>
 <div markdown="1">
-  
-![image](https://github.com/samgyeobsal-sparta/code3line/assets/107848521/676254ca-452d-44cc-b469-08e5c60d6b48)
+ 
+   ![Untitled (2)](https://github.com/user-attachments/assets/330ce7b6-7b14-441d-a6bc-522273cba4d6)
 
 </div>
 </details>
@@ -247,5 +247,74 @@
 <div id ="trouble">
   
 # ⚠️ 트러블 슈팅
+
+<details>
+<summary>docker 연결 문제1 - 3306 포트 충돌 </summary>
+<div markdown="1">
+   
+![스크린샷 2024-07-10 164602](https://github.com/user-attachments/assets/8d4c41fa-8d53-464a-a1ae-ec1912dba44f)
+
+  기존에 설치해놓은 mysql과 3306 포트가 충돌
+  ![스크린샷 2024-07-10 164845](https://github.com/user-attachments/assets/c5cf73ce-2ee5-4e74-aceb-075b96557304)
+  
+다음과 같이 cmd에서 작업한 후 다시 실행하니 문제없이 docker가 실행됨
+
+→ 이후 팀원들과 환경을 동일하게 하기위해  3307 포트로 변경하여 작업함. (충돌 많은 이슈)
+
+docker- compose → `ports:  - "3307:3306"`
+
+</div>
+</details>
+
+<details>
+<summary>docker 연결 문제2 - 특정 포트 사용 불가 </summary>
+<div markdown="1">
+   
+`an attempt was made to access a socket in a way forbidden by its access permissions.`
+
+- 윈도우를 껐다 켤 때마다 특정 포트들이 사용 불가능 하게 된다.
+<br>그러나 다른 곳에 사용 중인 포트는 아니다.
+
+- 재부팅을 할 때마다 사용 불가 포트가 바뀌기 때문에 보통 재부팅을 하면 해결 된다.
+
+</div>
+</details>
+
+<details>
+<summary>Java - Faker 연동 </summary>
+<div markdown="1">
+   
+- Java - Faker를 쓰면서 gradle과 snakeYAML 버전 때문에 의존성 추가가 어려웠던 점
+    
+    → 가장 최신 버전의 gradle 3.3.1과 연동되는 snakeYAML 버전을 찾아서 명시적으로 의존성 추가
+    
+- CSV 데이터를 MySQL 테이블에 삽입해야 하는데 `SHOW VARIABLES LIKE 'secure_file_priv';` 
+로 나온 폴더에 CSV 데이터를 옮긴다음 Local_infile을 해도 안되는 현상
+    
+    → MySQL을 docker를 통해 실행했기 때문에 권한 설정과 파일을 로컬이 아닌 docker를 통해서 진행하여 해결
+
+</div>
+</details>
+
+<details>
+<summary>보드 삭제 api 연동 </summary>
+<div markdown="1">
+   
+- 특정 보드 삭제하는 기능
+- 'Selected board does not have a valid ID.' `confirmDeleteBoard` 함수에서 선택된 보드의 `boardId`를 가져오는 과정에서 문제가 발생
+- 보드 생성 시 서버 응답에서 `id`를 추출하여 보드 객체에 추가하고, 삭제 함수 에서는 이 `id`를 사용하여 삭제 요청을 보내도록 수정
+
+</div>
+</details>
+
+<details>
+<summary>보드 삭제,수정했을 때 드롭다운 메뉴 자동 업데이트 </summary>
+<div markdown="1">
+   
+- 보드를 생성하거나 수정했을 때 드롭다운 메뉴가 자동으로 업데이트 되도록 수정
+- **보드 선택 드롭다운 수정**: `Object.keys(boards).map`을 통해 보드 이름들을 옵션으로 표시
+- **handleAddBoard 함수 수정**: `boardName.trim()`을 통해 보드 이름에서 앞뒤 공백을 제거하고 키로 사용.새로운 보드를 `setBoards`를 통해 추가하고 `selectedBoard`를 새 보드의 이름으로 설정하여 보드 선택 드롭다운에서 바로 선택되도록 한다.
+</div>
+</details>
 
 </div>
