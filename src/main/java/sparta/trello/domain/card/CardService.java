@@ -78,7 +78,7 @@ public class CardService {
 
         Card card = checkCard(cardId);
 
-        return new FindCardResponseDto(card.getTitle(), card.getBoard(), card.getStatus(), card.getContent(), card.getUser(), card.getDeadline());
+        return new FindCardResponseDto(card.getId(), card.getTitle(), card.getBoard(), card.getStatus(), card.getContent(), card.getUser(), card.getDeadline());
     }
 
     public void deleteCard(Long boardId, Long cardId, User user) {

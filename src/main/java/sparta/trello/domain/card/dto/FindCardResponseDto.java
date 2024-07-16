@@ -9,6 +9,7 @@ import java.time.LocalDate;
 
 @Data
 public class FindCardResponseDto {
+    Long id;
     String title;
     String boardTitle;
     String boardIntro;
@@ -17,7 +18,8 @@ public class FindCardResponseDto {
     String nickname;
     LocalDate deadline;
 
-    public FindCardResponseDto(String title, Board board, Status status, String content, User user, LocalDate deadline){
+    public FindCardResponseDto(Long id, String title, Board board, Status status, String content, User user, LocalDate deadline){
+        this.id = id;
         this.title = title;
         this.boardTitle = board.getBoardName();
         this.boardIntro = board.getIntroduction();
