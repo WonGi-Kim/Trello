@@ -8,7 +8,7 @@ import sparta.trello.domain.user.User;
 import java.time.LocalDate;
 
 @Data
-public class FindCardResponseDto {
+public class FindCardListResponseDto {
     Long id;
     String title;
     String boardTitle;
@@ -18,7 +18,7 @@ public class FindCardResponseDto {
     String nickname;
     LocalDate deadline;
 
-    public FindCardResponseDto(Long id, String title, Board board, Status status, String content, User user, LocalDate deadline){
+    public FindCardListResponseDto(Long id, String title, Board board, Status status, String content, User user, LocalDate deadline){
         this.id = id;
         this.title = title;
         this.boardTitle = board.getBoardName();
