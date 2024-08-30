@@ -25,6 +25,33 @@ public class StatusService {
     private final StatusRepository statusRepository;
     private final BoardRepository boardRepository;
 
+    // 성능 체크용 repository
+    private final StatusSecondRepository statusSecondRepository;
+
+    // 성능 체크용 클래스
+    public void comparePerformance(Long statusId, Long boardId) {
+        // QueryDSL 방식 성능 측정
+        long start = System.nanoTime();
+        statusRepository.findByIdAndBoardId(statusId, boardId);
+        long end = System.nanoTime();
+        System.out.println("QueryDSL <<<findByIdAndBoardId>>> 실행 시간: " + (end - start) + " ns");
+
+        start = System.nanoTime();
+        statusSecondRepository.findByIdAndBoardId(statusId, boardId);
+        end = System.nanoTime();
+        System.out.println("JPA <<<findByIdAndBoardId>>> 실행 시간: " + (end - start) + " ns");
+
+        start = System.nanoTime();
+        statusRepository.findByBoardIdOrderBySequence(boardId);
+        end = System.nanoTime();
+        System.out.println("QueryDSL <<<findByBoardIdOrderBySequence>>> 실행 시간: " + (end - start) + " ns");
+
+        start = System.nanoTime();
+        statusSecondRepository.findByBoardIdOrderBySequence(boardId);
+        end = System.nanoTime();
+        System.out.println("QueryDSL <<<findByBoardIdOrderBySequence>>> 실행 시간: " + (end - start) + " ns");
+    }
+
     public CreateStatusResponseDto createStatus(Long boardId, CreateStatusRequestDto requestDto, User user) {
         Board board = checkBoard(boardId);
 

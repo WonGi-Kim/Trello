@@ -63,5 +63,9 @@ DELETE http://localhost:8080/boards/3/status/52
 Authorization: Bearer {{access_token}}
 
 ### 더미데이터 생성
-POST http://localhost:8080/boards/1/status/dummy/100
+POST http://localhost:8080/boards/1/status/dummy/10000
+Authorization: Bearer {{access_token}}
+
+### 성능 체크
+GET http://localhost:8080/checkPerformance/5/1
 Authorization: Bearer {{access_token}}

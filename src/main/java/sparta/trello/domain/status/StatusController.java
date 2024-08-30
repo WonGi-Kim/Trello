@@ -63,5 +63,9 @@ public class StatusController {
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 
+    @GetMapping("/checkPerformance/{statusId}/{boardId}")
+    public void checkPerformance(@PathVariable("boardId") Long boardId, @PathVariable("statusId") Long statusId) {
+        statusService.comparePerformance(statusId, boardId);
+    }
 
 }
