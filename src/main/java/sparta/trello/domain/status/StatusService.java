@@ -1,5 +1,6 @@
 package sparta.trello.domain.status;
 
+import com.github.javafaker.Faker;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import sparta.trello.domain.board.Board;
@@ -12,6 +13,8 @@ import sparta.trello.domain.user.User;
 import sparta.trello.global.exception.CustomException;
 import sparta.trello.global.exception.ErrorCode;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -100,7 +103,38 @@ public class StatusService {
     }
 
     private Board checkBoard(Long boardId) {
-        Board board = boardRepository.findById(boardId).orElseThrow(()-> new CustomException(ErrorCode.NOT_FOUND_BOARD));
-        return board;
+        return boardRepository.findById(boardId).orElseThrow(()-> new CustomException(ErrorCode.NOT_FOUND_BOARD));
+    }
+
+    public CreateStatusResponseDto dummyCreateStatus(Long boardId, int count, User user) {
+        Board board = checkBoard(boardId);
+        Faker faker = new Faker();
+
+        checkManager(user.getRole().getValue());
+
+        try(FileWriter writer = new FileWriter("data.csv")){
+            writer.append("title,sequence,board_id\n");
+            int maxSequence = statusRepository.findMaxSequenceByBoardId(board.getId());
+            for(int i=1; i<=count; i++){
+                String title = faker.leagueOfLegends().champion();
+
+                int createdSequence = maxSequence + i;
+                Long board_id = boardId;
+
+                writer.append(title).append(",")
+                        .append(Integer.toString(createdSequence)).append(",")
+                        .append(board_id.toString()).append("\n");
+
+            }
+            System.out.println("CSV 파일 생성 완료!");
+        } catch (IOException e) {
+            System.out.println("CSV 파일 생성 중 오류 발생:");
+            e.printStackTrace();
+        }
+        CreateStatusResponseDto responseDto = CreateStatusResponseDto.builder()
+                .title("더미 클리어")
+                .build();
+
+        return responseDto;
     }
 }

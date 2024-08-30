@@ -53,4 +53,15 @@ public class StatusController {
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
 
+    @PostMapping("/boards/{boardId}/status/dummy/{count}")
+    public ResponseEntity<CommonResponse> dummyCreateStatus(@PathVariable("boardId") Long boardId,
+                                                       @PathVariable("count" )int count,
+                                                       @AuthenticationPrincipal UserPrincipal principal) {
+        CreateStatusResponseDto responseDto = statusService.dummyCreateStatus(boardId,count
+                ,principal.getUser());
+        CommonResponse response = new CommonResponse<>("더미 데이터 생성 완료", 201, responseDto);
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
+
+
 }

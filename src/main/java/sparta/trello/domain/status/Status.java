@@ -18,7 +18,7 @@ import java.util.List;
 public class Status extends Timestamped {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "status_id")
     private Long id;
 
