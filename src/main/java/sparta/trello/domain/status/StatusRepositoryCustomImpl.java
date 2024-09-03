@@ -16,29 +16,23 @@ public class StatusRepositoryCustomImpl implements StatusRepositoryCustom {
 
     @Override
     public Optional<Status> findByIdAndBoardId(Long statusId, Long boardId) {
-        QBoard qBoard = QBoard.board;
         QStatus qStatus = QStatus.status;
 
         Status status = queryFactory
-                .select(qStatus)
-                .from(qStatus)
-                .join(qStatus.board, qBoard)
+                .selectFrom(qStatus)
                 .where(qStatus.id.eq(statusId)
-                        .and(qBoard.id.eq(boardId)))
+                        .and(qStatus.board.id.eq(boardId)))
                 .fetchOne();
         return Optional.ofNullable(status);
     }
 
     @Override
     public List<Status> findByBoardIdOrderBySequence(Long boardId) {
-        QBoard qBoard = QBoard.board;
         QStatus qStatus = QStatus.status;
 
         List<Status> statusList = queryFactory
-                .select(qStatus)
-                .from(qBoard)
-                .join(qBoard.statuses, qStatus)
-                .where(qBoard.id.eq(boardId))
+                .selectFrom(qStatus)
+                .where(qStatus.board.id.eq(boardId))
                 .orderBy(qStatus.sequence.asc())
                 .fetch();
 
@@ -68,7 +62,8 @@ public class StatusRepositoryCustomImpl implements StatusRepositoryCustom {
                 .join(qBoard.statuses, qStatus)
                 .where(qBoard.id.eq(boardId)
                         .and(qStatus.title.eq(title)))
-                .fetchFirst() != null;
+                .limit(1)
+                .fetch() != null;
 
         return exists;
     }
