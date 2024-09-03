@@ -28,7 +28,7 @@ public class Status extends Timestamped {
     @Column(nullable = false)
     private int sequence;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY) // QueryDSL을 사용할 때 불필요한 조인을 방지하기 위함
     @JoinColumn(name = "board_id", nullable = false)
     private Board board;
 

@@ -49,7 +49,7 @@ public class StatusService {
         start = System.nanoTime();
         statusSecondRepository.findByBoardIdOrderBySequence(boardId);
         end = System.nanoTime();
-        System.out.println("QueryDSL <<<findByBoardIdOrderBySequence>>> 실행 시간: " + (end - start) + " ns");
+        System.out.println("JPA <<<findByBoardIdOrderBySequence>>> 실행 시간: " + (end - start) + " ns");
     }
 
     public CreateStatusResponseDto createStatus(Long boardId, CreateStatusRequestDto requestDto, User user) {
