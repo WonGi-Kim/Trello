@@ -1,0 +1,28 @@
+QueryDSL <<<findByIdAndBoardId>>> 실행 시간: 6952100 ns
+JPA <<<findByIdAndBoardId>>> 실행 시간: 1793300 ns
+QueryDSL <<<findByBoardIdOrderBySequence>>> 실행 시간: 47893700 ns
+JPA <<<findByBoardIdOrderBySequence>>> 실행 시간: 21885700 ns
+
+QueryDSL <<<findByIdAndBoardId>>> 실행 시간: 3148100 ns
+JPA <<<findByIdAndBoardId>>> 실행 시간: 1791700 ns
+QueryDSL <<<findByBoardIdOrderBySequence>>> 실행 시간: 43584600 ns
+JPA <<<findByBoardIdOrderBySequence>>> 실행 시간: 19824600 ns
+
+QueryDSL <<<findByIdAndBoardId>>> 실행 시간: 1451000 ns
+JPA <<<findByIdAndBoardId>>> 실행 시간: 1430300 ns
+QueryDSL <<<findByBoardIdOrderBySequence>>> 실행 시간: 50294500 ns
+JPA <<<findByBoardIdOrderBySequence>>> 실행 시간: 19554200 ns
+
+인덱스 적용 전 6952100 ns
+인덱스 적용 후 3148100 ns
+lazy fetch 적용 1451000 ns
+
+-- findByIdAndBoardId 메서드용 인덱스
+CREATE INDEX idx_status_id_board_id ON trello.status (status_id, board_id);
+-- findByBoardIdOrderBySequence 메서드용 인덱스
+CREATE INDEX idx_status_board_id_sequence ON trello.status (board_id, sequence);
+CREATE INDEX idx_board_sequence ON status (board_id, sequence);
+
+DROP INDEX idx_board_sequence ON status;
+DROP INDEX idx_status_board_id_sequence ON status;
+DROP INDEX idx_status_id_board_id ON status;
